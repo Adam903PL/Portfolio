@@ -5,8 +5,10 @@ import ScrambledText from './ui/Scrambled-Text';
 
 export default function Hero() {
   return (
-    <section id="hero" className="min-h-screen flex items-center justify-center px-4 pt-24 relative overflow-hidden">
-
+    <section
+      id="hero"
+      className="min-h-screen flex items-center justify-center px-4 pt-24 relative overflow-hidden"
+    >
       {/* Background decorative elements */}
       <div aria-hidden className="absolute inset-0 -z-10">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent"></div>
@@ -14,7 +16,6 @@ export default function Hero() {
       </div>
 
       <div className="max-w-5xl mx-auto text-center">
-
         {/* Badge */}
         <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm mb-8 hover:bg-white/10 transition-all">
           <span className="text-gray-300 text-sm">Open to work</span>
@@ -23,30 +24,22 @@ export default function Hero() {
 
         {/* Main Heading */}
         <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
-          Hi, I'm <span className="bg-gradient-to-r from-gray-400 via-white to-gray-400 bg-clip-text text-transparent animate-[gradient_3s_ease_infinite] bg-[length:200%_auto]">Adam Pukaluk</span>       </h1>
+          Hi, I'm{' '}
+          <span className="bg-gradient-to-r from-gray-400 via-white to-gray-400 bg-clip-text text-transparent animate-[gradient_3s_ease_infinite] bg-[length:200%_auto]">
+            Adam Pukaluk
+          </span>{' '}
+        </h1>
 
         {/* Subtitle */}
         <p className="text-2xl md:text-3xl text-gray-300 mb-4">
           Full-Stack Developer
         </p>
 
-        {/* Description */}
-
-          <ScrambledText
-
-
-
-            duration={1.2}
-
-            speed={1}
-
-            scrambleChars={".:"}
-
-          >
-            I build exceptional digital experiences that combine beautiful design with powerful functionality.
-            Specializing in React, Next.js, and Node.js.
-          </ScrambledText>
-
+        <p className="text-lg md:text-xl text-gray-400 mb-12 max-w-2xl mx-auto leading-relaxed">
+          I build exceptional digital experiences that combine beautiful design
+          with powerful functionality. Specializing in React, Next.js, and
+          Node.js.
+        </p>
 
         {/* CTA Buttons */}
         <div className="flex gap-4 justify-center flex-wrap mb-12">
