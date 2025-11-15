@@ -91,7 +91,7 @@ const educationData = [
     institution: "Technischools Lublin",
     description:
       "Currently studying programming, IT systems, and full-stack development. Building real applications and improving modern web development skills.",
-    skills: ["JavaScript", "TypeScript", "React", "Next.js", "SQL"],
+    skills: ["JavaScript", "TypeScript", "React", "Next.js", "SQL","Python",'Kotlin',"React Native","And more..."],
     level: ExperienceLevel.ADVANCED,
     icon: "graduation-cap",
     color: "from-[#00FFC9] to-[#00bd95]",
