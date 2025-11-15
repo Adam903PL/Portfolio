@@ -98,25 +98,25 @@ const logoElement = (
   );
 
   const contactButtonElement = (
-    <div className="relative group w-full sm:w-auto">
-      {/* Glow effect */}
-      <div className="absolute inset-0 -m-2 rounded-full
-                    hidden sm:block
-                    bg-white
-                    opacity-30 filter blur-lg pointer-events-none
-                    transition-all duration-300 ease-out
-                    group-hover:opacity-50 group-hover:blur-xl group-hover:-m-3"></div>
-      
-      {/* Button */}
-      <button className="relative z-10 px-4 py-2 sm:px-3 text-xs sm:text-sm font-semibold 
-                         text-black bg-gradient-to-br from-white to-gray-300 
-                         rounded-full hover:from-gray-100 hover:to-gray-400 
-                         transition-all duration-200 w-full sm:w-auto
-                         shadow-lg">
-        Contact Me
-      </button>
-    </div>
-  );
+  <a href="/contact" className="relative group w-full sm:w-auto">  {/* Zmiana: div → a */}
+    {/* Glow effect */}
+    <div className="absolute inset-0 -m-2 rounded-full
+                  hidden sm:block
+                  bg-white
+                  opacity-30 filter blur-lg pointer-events-none
+                  transition-all duration-300 ease-out
+                  group-hover:opacity-50 group-hover:blur-xl group-hover:-m-3"></div>
+    
+    {/* Button */}
+    <button className="relative z-10 px-4 py-2 sm:px-3 text-xs sm:text-sm font-semibold 
+                       text-black bg-gradient-to-br from-white to-gray-300 
+                       rounded-full hover:from-gray-100 hover:to-gray-400 
+                       transition-all duration-200 w-full sm:w-auto
+                       shadow-lg">
+      Contact Me
+    </button>
+  </a> 
+);
 
 
   return (
