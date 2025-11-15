@@ -37,21 +37,49 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
   ) => {
     const [rotation, setRotation] = useState(0);
     const rotationRef = useRef(0);
+    const targetRotationRef = useRef(0);
+    const isSnappingRef = useRef(false);
 
     const anglePerItem = items.length > 0 ? 360 / items.length : 0;
 
-    // Aktualizuj docelową rotację przy zmianie currentIndex
+    // Przy zmianie indeksu ustaw docelowy kąt, do którego mamy płynnie "dociągnąć"
     useEffect(() => {
+      const currentRotation = rotationRef.current;
       const targetAngle = -currentIndex * anglePerItem;
-      rotationRef.current = targetAngle;
+
+      // minimalny obrót do nowej pozycji
+      const diff = targetAngle - currentRotation;
+      const revolutions = Math.round(diff / 360);
+      const newTargetRotation =
+        currentRotation + (targetAngle - (currentRotation + revolutions * 360));
+
+      targetRotationRef.current = newTargetRotation;
+      isSnappingRef.current = true;
     }, [currentIndex, anglePerItem]);
 
-    // Ciągły obrót oparty o requestAnimationFrame
+    // Ciągły obrót + płynne przejście do nowego indeksu
     useEffect(() => {
       let animationFrameId: number;
 
       const animate = () => {
-        rotationRef.current += continuousSpinSpeed;
+        if (isSnappingRef.current) {
+          const current = rotationRef.current;
+          const target = targetRotationRef.current;
+          const delta = target - current;
+
+          // jeśli bardzo blisko celu – zakończ "snap"
+          if (Math.abs(delta) < 0.5) {
+            rotationRef.current = target;
+            isSnappingRef.current = false;
+          } else {
+            // easing w stronę docelowego kąta
+            rotationRef.current = current + delta * 0.15;
+          }
+        } else {
+          // zwykły ciągły obrót
+          rotationRef.current += continuousSpinSpeed;
+        }
+
         setRotation(rotationRef.current);
         animationFrameId = requestAnimationFrame(animate);
       };
