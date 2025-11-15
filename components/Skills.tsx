@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Filter, Layers, ChevronDown, ChevronUp, X } from 'lucide-react';
@@ -31,293 +31,345 @@ import PostmanIcon from '@/public/img/icons/postman-icon.svg';
 import JetBrainsIcon from '@/public/img/icons/icons8-jetbrains.svg';
 import N8NIcon from '@/public/img/icons/n8n.svg';
 import BetterAuthIcon from '@/public/img/icons/Better Auth_light.svg';
+import KotlinIcon from '@/public/img/icons/Kotlin_icon.svg';
 
 // NEW ICONS
 import ReactHookFormIcon from '@/public/img/icons/react-hooj-form-icon.svg';
 import StripeIcon from '@/public/img/icons/stripe-icon.svg';
 
 const ExperienceLevel = {
-  BEGINNER: "Beginner",
-  BASIC: "Basic",
-  INTERMEDIATE: "Intermediate",
-  ADVANCED: "Advanced",
-  EXPERT: "Expert"
+  BEGINNER: 'Beginner',
+  BASIC: 'Basic',
+  INTERMEDIATE: 'Intermediate',
+  ADVANCED: 'Advanced',
+  EXPERT: 'Expert',
 };
 
 const SkillCategory = {
-  LANGUAGE: "Languages",
-  FRAMEWORK: "Frameworks",
-  LIBRARY: "Libraries",
-  BACKEND: "Backend",
-  DATABASE: "Databases",
-  TOOLS: "Tools"
+  LANGUAGE: 'Languages',
+  FRAMEWORK: 'Frameworks',
+  LIBRARY: 'Libraries',
+  BACKEND: 'Backend',
+  DATABASE: 'Databases',
+  TOOLS: 'Tools',
 };
 
 const allSkills = [
   // Languages
   {
-    name: "JavaScript",
+    name: 'JavaScript',
     icon: JavaScriptIcon,
     level: ExperienceLevel.ADVANCED,
-    projects: "Many",
+    projects: 'Many',
     categories: [SkillCategory.LANGUAGE],
-    details: "Core language mastery (2+ years). Expert in ES6+ features, async/await patterns, closure utilization, and Promise chaining. Daily driver for production projects."
+    details:
+      'Core language mastery (2+ years). Expert in ES6+ features, async/await patterns, closure utilization, and Promise chaining. Daily driver for production projects.',
   },
   {
-    name: "TypeScript",
+    name: 'TypeScript',
     icon: TypeScriptIcon,
     level: ExperienceLevel.ADVANCED,
-    projects: "Many",
+    projects: 'Many',
     categories: [SkillCategory.LANGUAGE],
-    details: "Primary language for 1+ year. Advanced type system implementations, interface design, and generic programming. Full-stack integration with modern frameworks."
+    details:
+      'Primary language for 1+ year. Advanced type system implementations, interface design, and generic programming. Full-stack integration with modern frameworks.',
   },
   {
-    name: "Python",
+    name: 'Python',
     icon: PythonIcon,
     level: ExperienceLevel.ADVANCED,
-    projects: "Many",
+    projects: 'Many',
     categories: [SkillCategory.LANGUAGE],
-    details: "2022-2023 main focus. Web scraping automation, data analysis pipelines, and scripting solutions. Currently maintaining legacy projects while transitioning to JS/TS stack."
+    details:
+      '2022-2023 main focus. Web scraping automation, data analysis pipelines, and scripting solutions. Currently maintaining legacy projects while transitioning to JS/TS stack.',
   },
   {
-    name: "C++",
+    name: 'C++',
     icon: CppIcon,
     level: ExperienceLevel.BASIC,
-    projects: "Few",
+    projects: 'Few',
     categories: [SkillCategory.LANGUAGE],
-    details: "Hobbyist-level exploration of memory management, STL containers, and pointer arithmetic. Experimenting with low-level system concepts."
+    details:
+      'Hobbyist-level exploration of memory management, STL containers, and pointer arithmetic. Experimenting with low-level system concepts.',
   },
   {
-    name: "PHP",
+    name: 'PHP',
     icon: PhpIcon,
     level: ExperienceLevel.BASIC,
-    projects: "Several",
+    projects: 'Several',
     categories: [SkillCategory.LANGUAGE],
-    details: "Vocational exam preparation (2024). Building basic CMS systems and REST APIs with Laravel. Learning modern practices and OOP patterns."
+    details:
+      'Vocational exam preparation (2024). Building basic CMS systems and REST APIs with Laravel. Learning modern practices and OOP patterns.',
   },
   {
-    name: "HTML",
+    name: 'Kotlin',
+    icon: KotlinIcon,
+    level: ExperienceLevel.BASIC,
+    projects: 'Several',
+    categories: [SkillCategory.LANGUAGE],
+    details:
+      'Basics of Kotlin learned during vocational exam preparation (2024). Understanding of syntax, OOP fundamentals, null-safety and working with simple Android apps and CLI tools.',
+  },
+  {
+    name: 'HTML',
     icon: HTMLIcon,
     level: ExperienceLevel.EXPERT,
-    projects: "Many",
+    projects: 'Many',
     categories: [SkillCategory.LANGUAGE],
-    details: "Semantic markup, accessibility best practices, and modern HTML5 APIs. Foundation of all web development work."
+    details:
+      'Semantic markup, accessibility best practices, and modern HTML5 APIs. Foundation of all web development work.',
   },
-  
+
   // Frameworks & Libraries
   {
-    name: "React",
+    name: 'React',
     icon: ReactIcon,
     level: ExperienceLevel.ADVANCED,
     projects: 7,
     categories: [SkillCategory.FRAMEWORK, SkillCategory.LIBRARY],
-    details: "Hooks architecture, Context API, performance optimization, Concurrent Mode. Custom hooks and component composition patterns."
+    details:
+      'Hooks architecture, Context API, performance optimization, Concurrent Mode. Custom hooks and component composition patterns.',
   },
   {
-    name: "Next.js",
+    name: 'Next.js',
     icon: NextJsIcon,
     level: ExperienceLevel.INTERMEDIATE,
     projects: 3,
     categories: [SkillCategory.FRAMEWORK, SkillCategory.BACKEND],
-    details: "App Router, SSR/ISR, API routes, middleware, and server actions. Modern Next.js patterns and best practices."
+    details:
+      'App Router, SSR/ISR, API routes, middleware, and server actions. Modern Next.js patterns and best practices.',
   },
   {
-    name: "React Native",
+    name: 'React Native',
     icon: ReactNativeIcon,
     level: ExperienceLevel.INTERMEDIATE,
     projects: 2,
     categories: [SkillCategory.FRAMEWORK],
-    details: "Cross-platform mobile development, native modules integration, gesture handling, and React Navigation."
+    details:
+      'Cross-platform mobile development, native modules integration, gesture handling, and React Navigation.',
   },
   {
-    name: "Tailwind CSS",
+    name: 'Tailwind CSS',
     icon: TailwindIcon,
     level: ExperienceLevel.ADVANCED,
-    projects: "Several",
+    projects: 'Several',
     categories: [SkillCategory.FRAMEWORK, SkillCategory.LIBRARY],
-    details: "JIT compiler, custom plugins, responsive design patterns. Daily driver for styling modern web applications."
+    details:
+      'JIT compiler, custom plugins, responsive design patterns. Daily driver for styling modern web applications.',
   },
   {
-    name: "Redux Toolkit",
+    name: 'Redux Toolkit',
     icon: ReduxIcon,
     level: ExperienceLevel.INTERMEDIATE,
-    projects: "Several",
+    projects: 'Several',
     categories: [SkillCategory.LIBRARY],
-    details: "Slice patterns, RTK Query for API management, middleware configuration. Complex state management solutions."
+    details:
+      'Slice patterns, RTK Query for API management, middleware configuration. Complex state management solutions.',
   },
   {
-    name: "Zustand",
+    name: 'Zustand',
     icon: ZustandIcon,
     level: ExperienceLevel.ADVANCED,
-    projects: "Many",
+    projects: 'Many',
     categories: [SkillCategory.LIBRARY],
-    details: "Simplified state management, reactive stores, TypeScript integration. Lightweight alternative to Redux for smaller projects."
+    details:
+      'Simplified state management, reactive stores, TypeScript integration. Lightweight alternative to Redux for smaller projects.',
   },
   {
-    name: "Lottie",
+    name: 'Lottie',
     icon: LottieIcon,
     level: ExperienceLevel.INTERMEDIATE,
-    projects: "Many",
+    projects: 'Many',
     categories: [SkillCategory.LIBRARY],
-    details: "Complex animations, After Effects integration, dynamic SVG manipulation. Creating engaging user experiences with motion."
+    details:
+      'Complex animations, After Effects integration, dynamic SVG manipulation. Creating engaging user experiences with motion.',
   },
   // NEW: React Hook Form
   {
-    name: "React Hook Form",
+    name: 'React Hook Form',
     icon: ReactHookFormIcon,
     level: ExperienceLevel.INTERMEDIATE,
-    projects: "Several",
+    projects: 'Several',
     categories: [SkillCategory.LIBRARY],
-    details: "Form handling in React with excellent performance. Schema validation integration (e.g. Zod/Yup), dynamic forms, and complex controlled/uncontrolled input scenarios."
+    details:
+      'Form handling in React with excellent performance. Schema validation integration (e.g. Zod/Yup), dynamic forms, and complex controlled/uncontrolled input scenarios.',
   },
-  
+
   // Backend & APIs
   {
-    name: "Node.js",
+    name: 'Node.js',
     icon: NodeIcon,
     level: ExperienceLevel.ADVANCED,
-    projects: "Many",
+    projects: 'Many',
     categories: [SkillCategory.BACKEND, SkillCategory.FRAMEWORK],
-    details: "Daily driver for building production-grade REST APIs, WebSocket servers, and microservices. Expert in event loop optimization and NPM ecosystem."
+    details:
+      'Daily driver for building production-grade REST APIs, WebSocket servers, and microservices. Expert in event loop optimization and NPM ecosystem.',
   },
   {
-    name: "Express.js",
+    name: 'Express.js',
     icon: ExpressIcon,
     level: ExperienceLevel.ADVANCED,
-    projects: "Many",
+    projects: 'Many',
     categories: [SkillCategory.BACKEND, SkillCategory.FRAMEWORK],
-    details: "Advanced middleware patterns, RESTful routing architecture, and database-agnostic service implementations. Authentication middleware and error handling layers."
+    details:
+      'Advanced middleware patterns, RESTful routing architecture, and database-agnostic service implementations. Authentication middleware and error handling layers.',
   },
   {
-    name: "FastAPI",
+    name: 'FastAPI',
     icon: FastAPIIcon,
     level: ExperienceLevel.INTERMEDIATE,
     projects: 4,
     categories: [SkillCategory.BACKEND, SkillCategory.FRAMEWORK],
-    details: "2023 primary tool for building high-performance asynchronous endpoints with auto-generated Swagger docs. Strong experience with Pydantic models."
+    details:
+      '2023 primary tool for building high-performance asynchronous endpoints with auto-generated Swagger docs. Strong experience with Pydantic models.',
   },
   {
-    name: "Flask",
+    name: 'Flask',
     icon: FlaskIcon,
     level: ExperienceLevel.INTERMEDIATE,
     projects: 4,
     categories: [SkillCategory.BACKEND, SkillCategory.FRAMEWORK],
-    details: "2022-2023 projects focused on lightweight RESTful services and prototype development. Custom middleware implementations and Jinja2 templating."
+    details:
+      '2022-2023 projects focused on lightweight RESTful services and prototype development. Custom middleware implementations and Jinja2 templating.',
   },
   {
-    name: "BetterAuth",
+    name: 'BetterAuth',
     icon: BetterAuthIcon,
     level: ExperienceLevel.INTERMEDIATE,
     projects: 3,
     categories: [SkillCategory.BACKEND, SkillCategory.LIBRARY],
-    details: "Modern authentication system implementation using BetterAuth, integrated with Next.js App Router. Session handling, middleware, and custom authentication providers."
+    details:
+      'Modern authentication system implementation using BetterAuth, integrated with Next.js App Router. Session handling, middleware, and custom authentication providers.',
   },
   // NEW: Stripe
   {
-    name: "Stripe",
+    name: 'Stripe',
     icon: StripeIcon,
     level: ExperienceLevel.INTERMEDIATE,
-    projects: "Several",
+    projects: 'Several',
     categories: [SkillCategory.BACKEND, SkillCategory.TOOLS],
-    details: "Implemented payment flows using Stripe. Checkout sessions, webhooks handling, subscription logic and integration with full-stack applications."
+    details:
+      'Implemented payment flows using Stripe. Checkout sessions, webhooks handling, subscription logic and integration with full-stack applications.',
   },
-  
+
   // Databases
   {
-    name: "PostgreSQL",
+    name: 'PostgreSQL',
     icon: PostgresIcon,
     level: ExperienceLevel.INTERMEDIATE,
-    projects: "Many",
+    projects: 'Many',
     categories: [SkillCategory.DATABASE],
-    details: "Advanced query optimization, index management, and ORM integrations. Proficient in complex joins and window functions."
+    details:
+      'Advanced query optimization, index management, and ORM integrations. Proficient in complex joins and window functions.',
   },
   {
-    name: "MS SQL",
+    name: 'MS SQL',
     icon: MsSqlIcon,
     level: ExperienceLevel.INTERMEDIATE,
-    projects: "Many",
+    projects: 'Many',
     categories: [SkillCategory.DATABASE],
-    details: "Expert-level T-SQL development, complex stored procedures, and query optimization. Extensive 2023 focus on SSIS packages and data warehousing."
+    details:
+      'Expert-level T-SQL development, complex stored procedures, and query optimization. Extensive 2023 focus on SSIS packages and data warehousing.',
   },
-  
+
   // Tools & DevOps
   {
-    name: "Git",
+    name: 'Git',
     icon: GitIcon,
     level: ExperienceLevel.ADVANCED,
-    projects: "Daily",
+    projects: 'Daily',
     categories: [SkillCategory.TOOLS],
-    details: "Version control virtuoso - can resolve merge conflicts in my sleep. Comfortable with interactive rebasing, cherry-picking, and stash management."
+    details:
+      'Version control virtuoso - can resolve merge conflicts in my sleep. Comfortable with interactive rebasing, cherry-picking, and stash management.',
   },
   {
-    name: "VS Code",
+    name: 'VS Code',
     icon: VSCodeIcon,
     level: ExperienceLevel.EXPERT,
-    projects: "Daily",
+    projects: 'Daily',
     categories: [SkillCategory.TOOLS],
-    details: "My digital canvas - customized to pixel-perfect precision. Extension collection curated over years for the ultimate developer experience."
+    details:
+      'My digital canvas - customized to pixel-perfect precision. Extension collection curated over years for the ultimate developer experience.',
   },
   {
-    name: "Docker",
+    name: 'Docker',
     icon: DockerIcon,
     level: ExperienceLevel.INTERMEDIATE,
-    projects: "Several",
+    projects: 'Several',
     categories: [SkillCategory.TOOLS, SkillCategory.BACKEND],
-    details: "Containerization for development and deployment. Docker Compose for multi-container applications and microservices architecture."
+    details:
+      'Containerization for development and deployment. Docker Compose for multi-container applications and microservices architecture.',
   },
   {
-    name: "Postman",
+    name: 'Postman',
     icon: PostmanIcon,
     level: ExperienceLevel.INTERMEDIATE,
-    projects: "Many",
+    projects: 'Many',
     categories: [SkillCategory.TOOLS],
-    details: "API whisperer - crafting request collections that tell stories. Environment variables for seamless context switching between development environments."
+    details:
+      'API whisperer - crafting request collections that tell stories. Environment variables for seamless context switching between development environments.',
   },
   {
-    name: "JetBrains",
+    name: 'JetBrains',
     icon: JetBrainsIcon,
     level: ExperienceLevel.ADVANCED,
-    projects: "Frequently",
+    projects: 'Frequently',
     categories: [SkillCategory.TOOLS],
-    details: "IDE powerhouse - leveraging intelligent code completion and refactoring tools. Database tools integration that makes SQL feel like poetry."
+    details:
+      'IDE powerhouse - leveraging intelligent code completion and refactoring tools. Database tools integration that makes SQL feel like poetry.',
   },
   {
-    name: "n8n",
+    name: 'n8n',
     icon: N8NIcon,
     level: ExperienceLevel.ADVANCED,
-    projects: "Many",
+    projects: 'Many',
     categories: [SkillCategory.TOOLS, SkillCategory.BACKEND],
-    details: "Workflow automation, API integrations, and backend scenarios without extensive coding. Building complex automation workflows and business processes."
+    details:
+      'Workflow automation, API integrations, and backend scenarios without extensive coding. Building complex automation workflows and business processes.',
   },
   // NEW: Conventional Commits (custom div logo)
   {
-    name: "Conventional Commits",
+    name: 'Conventional Commits',
     icon: null,
-    customIcon: "conventional-commits",
+    customIcon: 'conventional-commits',
     level: ExperienceLevel.INTERMEDIATE,
-    projects: "Many",
+    projects: 'Many',
     categories: [SkillCategory.TOOLS],
-    details: "Consistent commit message conventions across projects. Helps generate changelogs, semantic versioning and keeps git history clean and searchable."
-  }
+    details:
+      'Consistent commit message conventions across projects. Helps generate changelogs, semantic versioning and keeps git history clean and searchable.',
+  },
 ];
 
 const SkillLevelStars = ({ level }) => {
   let stars = 0;
-  switch(level) {
-    case ExperienceLevel.EXPERT: stars = 5; break;
-    case ExperienceLevel.ADVANCED: stars = 4; break;
-    case ExperienceLevel.INTERMEDIATE: stars = 3; break;
-    case ExperienceLevel.BASIC: stars = 2; break;
-    default: stars = 1;
+  switch (level) {
+    case ExperienceLevel.EXPERT:
+      stars = 5;
+      break;
+    case ExperienceLevel.ADVANCED:
+      stars = 4;
+      break;
+    case ExperienceLevel.INTERMEDIATE:
+      stars = 3;
+      break;
+    case ExperienceLevel.BASIC:
+      stars = 2;
+      break;
+    default:
+      stars = 1;
   }
-  
+
   return (
     <div className="flex items-center gap-0.5">
       {[...Array(stars)].map((_, i) => (
-        <div key={`full-${i}`} className="text-yellow-400 w-3 h-3">★</div>
+        <div key={`full-${i}`} className="text-yellow-400 w-3 h-3">
+          ★
+        </div>
       ))}
       {[...Array(5 - stars)].map((_, i) => (
-        <div key={`empty-${i}`} className="text-gray-600 w-3 h-3">☆</div>
+        <div key={`empty-${i}`} className="text-gray-600 w-3 h-3">
+          ☆
+        </div>
       ))}
     </div>
   );
@@ -336,14 +388,17 @@ const SkillCard = ({ skill, index }) => {
       onMouseLeave={() => setIsHovered(false)}
       className="relative group"
     >
-      <div className="h-full p-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm
+      <div
+        className="h-full p-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm
                     hover:bg-white/10 hover:border-white/20 transition-all duration-300
-                    flex flex-col gap-3">
-        
+                    flex flex-col gap-3"
+      >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0
-                        group-hover:scale-110 transition-transform">
-            {skill.customIcon === "conventional-commits" ? (
+          <div
+            className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0
+                        group-hover:scale-110 transition-transform"
+          >
+            {skill.customIcon === 'conventional-commits' ? (
               <div className="w-8 h-8 rounded-full border-2 border-white bg-[linear-gradient(45deg,#fe5196,#f77062)]" />
             ) : (
               <Image
@@ -356,7 +411,9 @@ const SkillCard = ({ skill, index }) => {
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-white font-semibold text-sm truncate">{skill.name}</h3>
+            <h3 className="text-white font-semibold text-sm truncate">
+              {skill.name}
+            </h3>
             <p className="text-gray-400 text-xs">{skill.level}</p>
           </div>
         </div>
@@ -364,8 +421,8 @@ const SkillCard = ({ skill, index }) => {
         {/* Category badges */}
         <div className="flex flex-wrap gap-1">
           {skill.categories.map((cat) => (
-            <span 
-              key={cat} 
+            <span
+              key={cat}
               className="px-2 py-0.5 rounded-md bg-white/5 text-gray-400 text-[10px] border border-white/10"
             >
               {cat}
@@ -376,7 +433,9 @@ const SkillCard = ({ skill, index }) => {
         <div className="flex items-center justify-between">
           <SkillLevelStars level={skill.level} />
           <span className="text-xs text-gray-400">
-            {typeof skill.projects === 'number' ? `${skill.projects} projects` : skill.projects}
+            {typeof skill.projects === 'number'
+              ? `${skill.projects} projects`
+              : skill.projects}
           </span>
         </div>
 
@@ -398,7 +457,9 @@ const SkillCard = ({ skill, index }) => {
 };
 
 const Skills = () => {
-  const [selectedCategories, setSelectedCategories] = useState(new Set(['All']));
+  const [selectedCategories, setSelectedCategories] = useState(
+    new Set(['All']),
+  );
   const [selectedLevel, setSelectedLevel] = useState('All');
   const [showAll, setShowAll] = useState(false);
 
@@ -406,15 +467,15 @@ const Skills = () => {
   const levels = ['All', ...Object.values(ExperienceLevel)];
 
   const toggleCategory = (category) => {
-    setSelectedCategories(prev => {
+    setSelectedCategories((prev) => {
       const newSet = new Set(prev);
-      
+
       if (category === 'All') {
         return new Set(['All']);
       }
-      
+
       newSet.delete('All');
-      
+
       if (newSet.has(category)) {
         newSet.delete(category);
         if (newSet.size === 0) {
@@ -423,26 +484,30 @@ const Skills = () => {
       } else {
         newSet.add(category);
       }
-      
+
       return newSet;
     });
   };
 
-  const filteredSkills = allSkills.filter(skill => {
-    const categoryMatch = selectedCategories.has('All') || 
-                         skill.categories.some(cat => selectedCategories.has(cat));
+  const filteredSkills = allSkills.filter((skill) => {
+    const categoryMatch =
+      selectedCategories.has('All') ||
+      skill.categories.some((cat) => selectedCategories.has(cat));
     const levelMatch = selectedLevel === 'All' || skill.level === selectedLevel;
     return categoryMatch && levelMatch;
   });
 
-  // Reset showAll when filters change
+  // Reset showAll when filters change (bezpośrednio, ale ESLint tu przeszkadza)
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setShowAll(false);
   }, [selectedCategories, selectedLevel]);
 
   // Limit to 12 skills initially (3 rows x 4 columns)
   const INITIAL_COUNT = 8;
-  const displayedSkills = showAll ? filteredSkills : filteredSkills.slice(0, INITIAL_COUNT);
+  const displayedSkills = showAll
+    ? filteredSkills
+    : filteredSkills.slice(0, INITIAL_COUNT);
   const hasMore = filteredSkills.length > INITIAL_COUNT;
 
   return (
@@ -460,7 +525,8 @@ const Skills = () => {
             Skills & Technologies
           </h3>
           <p className="text-gray-400 max-w-2xl mx-auto">
-            A comprehensive overview of my technical skills across different domains
+            A comprehensive overview of my technical skills across different
+            domains
           </p>
         </div>
 
@@ -469,7 +535,9 @@ const Skills = () => {
             <div className="flex items-center gap-2 mb-3">
               <Filter className="text-gray-400 w-4 h-4" />
               <span className="text-sm text-gray-400 font-medium">
-                Categories {!selectedCategories.has('All') && `(${selectedCategories.size} selected)`}
+                Categories{' '}
+                {!selectedCategories.has('All') &&
+                  `(${selectedCategories.size} selected)`}
               </span>
               {!selectedCategories.has('All') && (
                 <button
@@ -489,9 +557,10 @@ const Skills = () => {
                     key={category}
                     onClick={() => toggleCategory(category)}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
-                      ${isSelected
-                        ? 'bg-gradient-to-br from-white to-gray-300 text-black shadow-lg'
-                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
+                      ${
+                        isSelected
+                          ? 'bg-gradient-to-br from-white to-gray-300 text-black shadow-lg'
+                          : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
                       }`}
                   >
                     {category}
@@ -504,7 +573,9 @@ const Skills = () => {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Layers className="text-gray-400 w-4 h-4" />
-              <span className="text-sm text-gray-400 font-medium">Experience Level</span>
+              <span className="text-sm text-gray-400 font-medium">
+                Experience Level
+              </span>
             </div>
             <div className="flex flex-wrap gap-2">
               {levels.map((level) => (
@@ -512,9 +583,10 @@ const Skills = () => {
                   key={level}
                   onClick={() => setSelectedLevel(level)}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
-                    ${selectedLevel === level
-                      ? 'bg-gradient-to-br from-white to-gray-300 text-black shadow-lg'
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
+                    ${
+                      selectedLevel === level
+                        ? 'bg-gradient-to-br from-white to-gray-300 text-black shadow-lg'
+                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
                     }`}
                 >
                   {level}
@@ -524,7 +596,7 @@ const Skills = () => {
           </div>
         </div>
 
-        <motion.div 
+        <motion.div
           layout
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8"
         >
@@ -537,7 +609,9 @@ const Skills = () => {
 
         {filteredSkills.length === 0 && (
           <div className="text-center py-16 mb-8">
-            <p className="text-gray-400 text-lg">No skills match your filters</p>
+            <p className="text-gray-400 text-lg">
+              No skills match your filters
+            </p>
             <button
               onClick={() => {
                 setSelectedCategories(new Set(['All']));
@@ -552,7 +626,7 @@ const Skills = () => {
 
         {/* Show More/Less Button */}
         {hasMore && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex justify-center mb-16"
@@ -564,11 +638,17 @@ const Skills = () => {
                        flex items-center gap-3"
             >
               <span className="text-white font-medium">
-                {showAll ? 'Show Less' : `Show More (${filteredSkills.length - INITIAL_COUNT} hidden)`}
+                {showAll
+                  ? 'Show Less'
+                  : `Show More (${filteredSkills.length - INITIAL_COUNT} hidden)`}
               </span>
               <motion.div
                 animate={{ y: showAll ? [-2, 0, -2] : [2, 0, 2] }}
-                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 1.5,
+                  ease: 'easeInOut',
+                }}
               >
                 {showAll ? (
                   <ChevronUp className="w-5 h-5 text-white" />
@@ -582,17 +662,27 @@ const Skills = () => {
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center p-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm">
-            <p className="text-3xl font-bold text-white mb-1">{allSkills.length}</p>
+            <p className="text-3xl font-bold text-white mb-1">
+              {allSkills.length}
+            </p>
             <p className="text-xs text-gray-400">Total Skills</p>
           </div>
           <div className="text-center p-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm">
             <p className="text-3xl font-bold text-white mb-1">
-              {allSkills.filter(s => s.level === ExperienceLevel.EXPERT || s.level === ExperienceLevel.ADVANCED).length}
+              {
+                allSkills.filter(
+                  (s) =>
+                    s.level === ExperienceLevel.EXPERT ||
+                    s.level === ExperienceLevel.ADVANCED,
+                ).length
+              }
             </p>
             <p className="text-xs text-gray-400">Advanced+</p>
           </div>
           <div className="text-center p-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm">
-            <p className="text-3xl font-bold text-white mb-1">{Object.keys(SkillCategory).length}</p>
+            <p className="text-3xl font-bold text-white mb-1">
+              {Object.keys(SkillCategory).length}
+            </p>
             <p className="text-xs text-gray-400">Categories</p>
           </div>
           <div className="text-center p-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm">

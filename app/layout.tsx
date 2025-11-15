@@ -32,12 +32,12 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Adam Pukaluk' }],
   creator: 'Adam Pukaluk',
-  metadataBase: new URL('https://adam-pukaluk.vercel.app'),
+  metadataBase: new URL('https://www.adampukaluk.pl'),
 
   openGraph: {
     title: 'Adam Pukaluk – Portfolio',
     description: 'Young full-stack developer building modern web experiences.',
-    url: 'https://adam-pukaluk.vercel.app',
+    url: 'https://www.adampukaluk.pl',
     siteName: 'Adam Pukaluk Portfolio',
     type: 'website',
     locale: 'en_US',
@@ -48,6 +48,7 @@ export const metadata: Metadata = {
     title: 'Adam Pukaluk – Portfolio',
     description: 'Young full-stack developer building modern web experiences.',
   },
+  icons: undefined,
 };
 
 export default function RootLayout({

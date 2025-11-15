@@ -123,9 +123,7 @@ export function EmailTemplate({
               <div className="mt-8 text-center text-xs text-gray-500">
                 <Text>
                   Sent via{' '}
-                  <span className="text-white font-medium">
-                    adam-pukaluk.pl
-                  </span>
+                  <span className="text-white font-medium">adampukaluk.pl</span>
                 </Text>
 
                 <Text className="mt-1">
