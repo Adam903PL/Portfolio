@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Adam Pukaluk' }],
   creator: 'Adam Pukaluk',
-  metadataBase: new URL('adam-pukaluk.vercel.app'),
+  metadataBase: new URL('https://adam-pukaluk.vercel.app'),
 
   openGraph: {
     title: 'Adam Pukaluk – Portfolio',
