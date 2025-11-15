@@ -19,9 +19,8 @@ export interface GalleryItem {
 interface CircularGalleryProps extends HTMLAttributes<HTMLDivElement> {
   items: GalleryItem[];
   radius?: number;
-  autoRotateSpeed?: number;
-  currentIndex?: number; // NOWY PROP
-  onIndexChange?: (index: number) => void; // NOWY PROP
+  currentIndex: number;
+  continuousSpinSpeed: number; // Teraz wymagany
 }
 
 const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
@@ -29,84 +28,79 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
     items, 
     className, 
     radius = 600, 
-    autoRotateSpeed = 0.02, 
-    currentIndex, // NOWY
-    onIndexChange, // NOWY
+    currentIndex,
+    continuousSpinSpeed, 
     ...props 
   }, ref) => {
+    
     const [rotation, setRotation] = useState(0);
-    const [isScrolling, setIsScrolling] = useState(false);
-    const [isUserControlled, setIsUserControlled] = useState(false);
-    const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const animationFrameRef = useRef<number | null>(null);
+    const [isTransitioning, setIsTransitioning] = useState(false); // NOWY STAN
+    const rotationRef = useRef(rotation); 
+    const isContinuousSpinning = true; // ZAWSZE true
+    const anglePerItem = items.length > 0 ? 360 / items.length : 0;
 
-    // Jeśli currentIndex jest kontrolowany z zewnątrz, użyj go
+
+    // EFEKT 1: Obsługa ręcznego przeskoku
     useEffect(() => {
-      if (currentIndex !== undefined) {
-        setIsUserControlled(true);
-        const anglePerItem = 360 / items.length;
-        const targetRotation = -currentIndex * anglePerItem;
-        setRotation(targetRotation);
+      // Jeśli jesteśmy już w trakcie przejścia, ignoruj kolejne zmiany
+      if (isTransitioning) return;
+
+      const targetAngle = -(currentIndex) * anglePerItem;
+      const currentRotation = rotationRef.current;
+      
+      // Obliczanie minimalnej odległości kątowej. 
+      // Jest to kluczowe, aby przeskok był w tym samym kierunku, co ciągły obrót
+      // i jednocześnie minimalnie zmieniał aktualną rotację.
+      const diff = targetAngle - currentRotation;
+      const revolutions = Math.round(diff / 360); 
+      const newTargetRotation = currentRotation + (targetAngle - (currentRotation + revolutions * 360));
+
+      // Jeśli nowa docelowa rotacja jest inna niż aktualna rotacja:
+      if (Math.abs(newTargetRotation - currentRotation) > 0.01) {
+        setIsTransitioning(true);
+        setRotation(newTargetRotation); // Uruchomienie przejścia CSS
+        rotationRef.current = newTargetRotation;
       }
-    }, [currentIndex, items.length]);
+    }, [currentIndex, anglePerItem, isTransitioning]);
 
-    // Effect to handle scroll-based rotation (tylko gdy nie jest kontrolowany)
+    // EFEKT 3: Resetowanie flagi przejścia
     useEffect(() => {
-      if (currentIndex !== undefined) return; // Skip jeśli kontrolowany
+      let transitionTimer: NodeJS.Timeout;
+      if (isTransitioning) {
+        // Po upływie czasu przejścia CSS (np. 700ms) zresetuj flagę
+        transitionTimer = setTimeout(() => {
+          setIsTransitioning(false);
+        }, 700); 
+      }
+      return () => clearTimeout(transitionTimer);
+    }, [isTransitioning]);
 
-      const handleScroll = () => {
-        setIsScrolling(true);
-        if (scrollTimeoutRef.current) {
-          clearTimeout(scrollTimeoutRef.current);
-        }
 
-        const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const scrollProgress = scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
-        const scrollRotation = scrollProgress * 360;
-        setRotation(scrollRotation);
-
-        // Wywołaj callback z aktualnym indexem
-        if (onIndexChange) {
-          const anglePerItem = 360 / items.length;
-          const currentIdx = Math.round((scrollRotation % 360) / anglePerItem) % items.length;
-          onIndexChange(currentIdx);
-        }
-
-        scrollTimeoutRef.current = setTimeout(() => {
-          setIsScrolling(false);
-        }, 150);
-      };
-
-      window.addEventListener('scroll', handleScroll, { passive: true });
-      return () => {
-        window.removeEventListener('scroll', handleScroll);
-        if (scrollTimeoutRef.current) {
-          clearTimeout(scrollTimeoutRef.current);
-        }
-      };
-    }, [currentIndex, items.length, onIndexChange]);
-
-    // Effect for auto-rotation (wyłączony gdy kontrolowany)
+    // EFEKT 2: Pętla `requestAnimationFrame` (ciągły obrót)
     useEffect(() => {
-      if (currentIndex !== undefined) return; // Skip jeśli kontrolowany
-
-      const autoRotate = () => {
-        if (!isScrolling) {
-          setRotation(prev => prev + autoRotateSpeed);
-        }
-        animationFrameRef.current = requestAnimationFrame(autoRotate);
+      // Kontynuujemy obracanie, tylko jeśli nie trwa przejście CSS
+      if (isTransitioning) {
+          return;
+      }
+      
+      let animationFrameId: number;
+      
+      const animate = () => {
+        rotationRef.current += continuousSpinSpeed;
+        setRotation(rotationRef.current);
+        animationFrameId = requestAnimationFrame(animate);
       };
 
-      animationFrameRef.current = requestAnimationFrame(autoRotate);
+      // Rozpocznij pętlę animacji
+      animationFrameId = requestAnimationFrame(animate);
 
+      // Funkcja czyszcząca - zatrzymaj pętlę przy odmontowaniu
       return () => {
-        if (animationFrameRef.current) {
-          cancelAnimationFrame(animationFrameRef.current);
-        }
+        cancelAnimationFrame(animationFrameId);
       };
-    }, [isScrolling, autoRotateSpeed, currentIndex]);
+      
+    }, [isTransitioning, continuousSpinSpeed]); // Zależne od flagi isTransitioning
 
-    const anglePerItem = 360 / items.length;
     
     return (
       <div
@@ -118,13 +112,18 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
         {...props}
       >
         <div
-          className="relative w-full h-full transition-transform duration-500 ease-out"
+          // Przejście CSS tylko, gdy jest ręczna interakcja (isTransitioning)
+          className={cn(
+            "relative w-full h-full",
+            isTransitioning && "transition-transform duration-700 ease-out" 
+          )}
           style={{
             transform: `rotateY(${rotation}deg)`,
             transformStyle: 'preserve-3d',
           }}
         >
           {items.map((item, i) => {
+            // Obliczenia kąta, przezroczystości i skali (bez zmian)
             const itemAngle = i * anglePerItem;
             const totalRotation = rotation % 360;
             const relativeAngle = (itemAngle + totalRotation + 360) % 360;
@@ -145,7 +144,10 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                   marginLeft: '-150px',
                   marginTop: '-200px',
                   opacity: opacity,
-                  transition: 'opacity 0.5s ease-out, transform 0.5s ease-out'
+                  
+                  // Przejścia są wyłączone dla elementów, aby nie kolidowały z ciągłym obrotem, 
+                  // ale w trybie przejścia ich brak nie ma dużego znaczenia.
+                  transition: 'none' 
                 }}
               >
                 <div className="relative w-full h-full rounded-lg shadow-2xl overflow-hidden group border border-white/20 bg-card/70 dark:bg-card/30 backdrop-blur-lg">
@@ -172,4 +174,4 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
 
 CircularGallery.displayName = 'CircularGallery';
 
-export { CircularGallery };
+export { CircularGallery }; 

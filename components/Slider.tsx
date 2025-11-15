@@ -1,8 +1,9 @@
 "use client";
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState, useCallback } from 'react'; // Usunięto useRef, useEffect
 import { CircularGallery, GalleryItem } from '@/components/ui/circular-gallery';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+// ... (galleryData bez zmian) ...
 const galleryData: GalleryItem[] = [
     {
         common: 'Lion',
@@ -105,174 +106,103 @@ const galleryData: GalleryItem[] = [
 ];
 
 const GallerySlider = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isInView, setIsInView] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [dragOffset, setDragOffset] = useState(0);
+    // Stan tylko do śledzenia aktualnie wybranego elementu
+    const [currentIndex, setCurrentIndex] = useState(0); 
+    const SPIN_SPEED = 0.03; // Stała prędkość ciągłego obrotu
 
-  // Intersection Observer
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      { threshold: 0.3 }
+    // Funkcja do aktualizacji indeksu (bez żadnych timerów czy zmian trybu)
+    const handleInteraction = useCallback((newIndex: number) => {
+        setCurrentIndex(newIndex);
+    }, []);
+
+    const handlePrev = () => {
+        const newIndex = (currentIndex - 1 + galleryData.length) % galleryData.length;
+        handleInteraction(newIndex);
+    };
+
+    const handleNext = () => {
+        const newIndex = (currentIndex + 1) % galleryData.length;
+        handleInteraction(newIndex);
+    };
+    
+    const handleDotClick = (index: number) => {
+        handleInteraction(index);
+    };
+
+
+    return (
+        <div className="relative h-screen">
+            <div className="absolute inset-0 pointer-events-none z-[5]" />
+            
+            <div className="w-full h-screen sticky top-0 flex flex-col items-center justify-center overflow-hidden">
+                {/* Header */}
+                <div className="text-center mb-8 absolute top-16 z-10 px-4">
+                    <div className="backdrop-blur-md bg-black/40 rounded-2xl px-8 py-6 border border-white/20 shadow-2xl">
+                        <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+                            <p className="bg-gradient-to-r from-gray-400 via-white to-gray-400 bg-clip-text text-transparent animate-[gradient_3s_ease_infinite] bg-[length:200%_auto]">
+                                Life & Moments
+                            </p>
+                        </h1>
+                        <p className="text-gray-200 text-lg drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                            Ciągły obrót z ręcznym przeskokiem
+                        </p>
+                    </div>
+                </div>
+                
+                {/* Gallery */}
+                <div className="w-full h-full select-none">
+                    <CircularGallery 
+                        items={galleryData} 
+                        currentIndex={currentIndex}
+                        // ZAWSZE przekazujemy prędkość, by obrót był ciągły
+                        continuousSpinSpeed={SPIN_SPEED} 
+                    />
+                </div>
+
+                {/* Controls (pozostają bez zmian w JSX) */}
+                <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex gap-4 z-10">
+                    <button
+                        onClick={handlePrev}
+                        className="w-12 h-12 rounded-full backdrop-blur-md bg-black/40 border border-white/20 
+                                   flex items-center justify-center text-white hover:bg-black/60 transition-all
+                                   hover:scale-110 active:scale-95 shadow-lg"
+                    >
+                        <ChevronLeft className="w-6 h-6" />
+                    </button>
+
+                    <div className="flex items-center gap-2 backdrop-blur-md bg-black/40 rounded-full px-6 border border-white/20 shadow-lg">
+                        <span className="text-white font-semibold">{currentIndex + 1}</span>
+                        <span className="text-gray-400">/</span>
+                        <span className="text-gray-400">{galleryData.length}</span>
+                    </div>
+
+                    <button
+                        onClick={handleNext}
+                        className="w-12 h-12 rounded-full backdrop-blur-md bg-black/40 border border-white/20 
+                                   flex items-center justify-center text-white hover:bg-black/60 transition-all
+                                   hover:scale-110 active:scale-95 shadow-lg"
+                    >
+                        <ChevronRight className="w-6 h-6" />
+                    </button>
+                </div>
+
+                {/* Dots */}
+                <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+                    {galleryData.map((_, index) => (
+                        <button
+                            key={index}
+                            onClick={() => handleDotClick(index)}
+                            className={`h-2 rounded-full transition-all duration-300 ${
+                                index === currentIndex 
+                                  ? 'bg-white w-8' 
+                                  : 'bg-white/30 hover:bg-white/50 w-2'
+                            }`}
+                        />
+                    ))}
+                </div>
+            </div>
+        </div>
     );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    return () => {
-      if (containerRef.current) {
-        observer.unobserve(containerRef.current);
-      }
-    };
-  }, []);
-
-  // Scroll-based rotation (tylko gdy w viewport i nie przeciągamy)
-  useEffect(() => {
-    if (!isInView || isDragging) return;
-
-    const handleScroll = () => {
-      if (!containerRef.current) return;
-
-      const rect = containerRef.current.getBoundingClientRect();
-      const scrollProgress = Math.max(0, Math.min(1, -rect.top / (rect.height - window.innerHeight)));
-      const newIndex = Math.floor(scrollProgress * galleryData.length) % galleryData.length;
-      
-      setCurrentIndex(newIndex);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isInView, isDragging]);
-
-  // Drag handlers
-  const handleDragStart = (clientX: number) => {
-    setIsDragging(true);
-    setStartX(clientX);
-    setDragOffset(0);
-  };
-
-  const handleDragMove = (clientX: number) => {
-    if (!isDragging) return;
-    
-    const diff = startX - clientX;
-    setDragOffset(diff);
-    
-    // Zmiana indexu co 100px
-    if (Math.abs(diff) > 100) {
-      const direction = diff > 0 ? 1 : -1;
-      setCurrentIndex((prev) => {
-        const newIndex = (prev + direction + galleryData.length) % galleryData.length;
-        return newIndex;
-      });
-      setStartX(clientX);
-      setDragOffset(0);
-    }
-  };
-
-  const handleDragEnd = () => {
-    setIsDragging(false);
-    setDragOffset(0);
-  };
-
-  // Navigation
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + galleryData.length) % galleryData.length);
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % galleryData.length);
-  };
-
-  return (
-    <div 
-      ref={containerRef}
-      className="relative h-[300vh]"
-    >
-      <div className="absolute inset-0  pointer-events-none z-[5]" />
-      
-      <div className="w-full h-screen sticky top-0 flex flex-col items-center justify-center overflow-hidden">
-        {/* Header */}
-        <div className="text-center mb-8 absolute top-16 z-10 px-4">
-          <div className="backdrop-blur-md bg-black/40 rounded-2xl px-8 py-6 border border-white/20 shadow-2xl">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-              <p className="bg-gradient-to-r from-gray-400 via-white to-gray-400 bg-clip-text text-transparent animate-[gradient_3s_ease_infinite] bg-[length:200%_auto]">
-              Life & Moments
-              </p>  
-            </h1>
-            <p className="text-gray-200 text-lg drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-              {isInView ? 'Scroll or drag to browse' : 'Scroll down to view'}
-            </p>
-          </div>
-        </div>
-        
-        {/* Gallery */}
-        <div 
-          className={`w-full h-full ${isDragging ? 'cursor-grabbing' : 'cursor-grab'} select-none`}
-          onMouseDown={(e) => handleDragStart(e.clientX)}
-          onMouseMove={(e) => handleDragMove(e.clientX)}
-          onMouseUp={handleDragEnd}
-          onMouseLeave={handleDragEnd}
-          onTouchStart={(e) => handleDragStart(e.touches[0].clientX)}
-          onTouchMove={(e) => handleDragMove(e.touches[0].clientX)}
-          onTouchEnd={handleDragEnd}
-        >
-          <CircularGallery 
-            items={galleryData} 
-            currentIndex={isInView ? currentIndex : undefined}
-            onIndexChange={setCurrentIndex}
-          />
-        </div>
-
-        {/* Controls */}
-        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex gap-4 z-10">
-          <button
-            onClick={handlePrev}
-            className="w-12 h-12 rounded-full backdrop-blur-md bg-black/40 border border-white/20 
-                     flex items-center justify-center text-white hover:bg-black/60 transition-all
-                     hover:scale-110 active:scale-95 shadow-lg"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-
-          <div className="flex items-center gap-2 backdrop-blur-md bg-black/40 rounded-full px-6 border border-white/20 shadow-lg">
-            <span className="text-white font-semibold">{currentIndex + 1}</span>
-            <span className="text-gray-400">/</span>
-            <span className="text-gray-400">{galleryData.length}</span>
-          </div>
-
-          <button
-            onClick={handleNext}
-            className="w-12 h-12 rounded-full backdrop-blur-md bg-black/40 border border-white/20 
-                     flex items-center justify-center text-white hover:bg-black/60 transition-all
-                     hover:scale-110 active:scale-95 shadow-lg"
-          >
-            <ChevronRight className="w-6 h-6" />
-          </button>
-        </div>
-
-        {/* Dots */}
-        <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
-          {galleryData.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentIndex(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentIndex 
-                  ? 'bg-white w-8' 
-                  : 'bg-white/30 hover:bg-white/50 w-2'
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
 };
 
 export default GallerySlider;
