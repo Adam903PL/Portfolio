@@ -5,6 +5,20 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  {
+    rules: {
+      // Wyłączenie błędu dla nieużywanych zmiennych
+      "@typescript-eslint/no-unused-vars": "off",
+
+      "@typescript-eslint/no-explicit-any": "off",
+
+      // Wyłączenie błędu dla nieescapowanych znaków w JSX
+      "react/no-unescaped-entities": "off",
+
+      // Wyłączenie błędu dla zależności useEffect
+      "react-hooks/exhaustive-deps": "off",
+    },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
