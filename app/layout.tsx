@@ -48,7 +48,6 @@ export const metadata: Metadata = {
     title: 'Adam Pukaluk – Portfolio',
     description: 'Young full-stack developer building modern web experiences.',
   },
-  icons: undefined,
 };
 
 export default function RootLayout({
