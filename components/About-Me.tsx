@@ -1,5 +1,6 @@
 "use client"
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { Code2, Palette, Rocket, User, Calendar, Briefcase, Phone, Check } from 'lucide-react';
 
 const About = () => {
@@ -34,7 +35,17 @@ const About = () => {
           {/* Left side - Visual */}
           <div className="relative">
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-gray-600/10 to-gray-800/10 backdrop-blur-sm flex items-center justify-center">
-              <User className="w-32 h-32 text-white/80" strokeWidth={1.5} />
+              <div className="relative w-3/4 h-3/4">
+                <Image
+                  src="/img/me2.jpg"
+                  alt="Adam Pukaluk"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 200px, 300px"
+                  className="object-cover rounded-2xl shadow-2xl shadow-black/40"
+                />
+                <div className="pointer-events-none absolute inset-0 rounded-2xl ring-2 ring-white/20" />
+              </div>
             </div>
             
             {/* Floating badge */}
