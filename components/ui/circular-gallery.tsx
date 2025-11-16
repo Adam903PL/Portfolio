@@ -6,8 +6,8 @@ const cn = (...classes: (string | undefined | null | false)[]) => {
 };
 
 export interface GalleryItem {
-  common: string;
-  binomial: string;
+  title: string;
+  subtitle: string;
   photo: {
     url: string;
     text: string;
@@ -124,7 +124,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
               <div
                 key={item.photo.url}
                 role="group"
-                aria-label={item.common}
+                aria-label={item.title}
                 className="absolute w-[300px] h-[400px]"
                 style={{
                   transform: `rotateY(${itemAngle}deg) translateZ(${radius}px) scale(${scale})`,
@@ -145,10 +145,10 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
                   />
                   <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black/90 to-transparent text-white">
                     <h2 className="text-xl font-bold drop-shadow-lg">
-                      {item.common}
+                      {item.title}
                     </h2>
                     <em className="text-sm italic opacity-90 drop-shadow-md">
-                      {item.binomial}
+                      {item.subtitle}
                     </em>
                     <p className="text-xs mt-2 opacity-80 drop-shadow-md">
                       Photo by: {item.photo.by}

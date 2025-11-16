@@ -1,119 +1,126 @@
 'use client';
-import React, { useState, useCallback } from 'react'; // Usunięto useRef, useEffect
+import React, { useState, useCallback } from 'react';
 import { CircularGallery, GalleryItem } from '@/components/ui/circular-gallery';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const PLACEHOLDER_URL =
-  'https://linda-hoang.com/wp-content/uploads/2014/10/img-placeholder-dark-vertical.jpg';
+import Image1 from '@/public/img/gallery/image_1.jpg';
+import Image2 from '@/public/img/gallery/image_2.jpg';
+import Image3 from '@/public/img/gallery/image_3.jpg';
+import Image4 from '@/public/img/gallery/image_4.jpg';
+import Image5 from '@/public/img/gallery/image_5.jpg';
+import Image6 from '@/public/img/gallery/image_6.jpg';
+import Image7 from '@/public/img/gallery/image_7.jpg';
+import Image8 from '@/public/img/gallery/image_8.jpg';
+import Image9 from '@/public/img/gallery/image_9.jpg';
+import Image10 from '@/public/img/gallery/image_10.jpg';
 
 const galleryData: GalleryItem[] = [
   {
-    common: 'Project Alpha',
-    binomial: 'Design Mockup I',
+    title: 'Golden Buddha',
+    subtitle: 'Peaceful temple display',
     photo: {
-      url: PLACEHOLDER_URL,
-      text: 'Empty placeholder image for Project Alpha',
+      url: Image1.src,
+      text: 'Golden Buddha statue in a red shrine',
       pos: '50% 50%',
-      by: 'System Placeholder',
+      by: 'Adam Pukaluk',
     },
   },
   {
-    common: 'Module Beta',
-    binomial: 'Development Phase II',
+    title: 'Madeira Cliffs',
+    subtitle: 'Wild rock formations',
     photo: {
-      url: PLACEHOLDER_URL,
-      text: 'Empty placeholder image for Module Beta',
+      url: Image2.src,
+      text: 'Tall volcanic rocks at the Madeira coast',
       pos: '50% 50%',
-      by: 'System Placeholder',
+      by: 'Adam Pukaluk',
     },
   },
   {
-    common: 'Feature Gamma',
-    binomial: 'UI/UX Concept III',
+    title: 'Ocean Power',
+    subtitle: 'Waves crashing the shore',
     photo: {
-      url: PLACEHOLDER_URL,
-      text: 'Empty placeholder image for Feature Gamma',
+      url: Image3.src,
+      text: 'Waves hitting the stones at Madeira',
       pos: '50% 50%',
-      by: 'System Placeholder',
+      by: 'Adam Pukaluk',
     },
   },
   {
-    common: 'Service Delta',
-    binomial: 'Integration Setup IV',
+    title: 'Cliff View',
+    subtitle: 'Standing at the seaside',
     photo: {
-      url: PLACEHOLDER_URL,
-      text: 'Empty placeholder image for Service Delta',
+      url: Image4.src,
+      text: 'Adam at the rocky Madeira coastline',
       pos: '50% 50%',
-      by: 'System Placeholder',
+      by: 'Adam Pukaluk',
     },
   },
   {
-    common: 'Prototype Epsilon',
-    binomial: 'Testing Iteration V',
+    title: 'Wide Ocean View',
+    subtitle: 'Rock pillars and open sea',
     photo: {
-      url: PLACEHOLDER_URL,
-      text: 'Empty placeholder image for Prototype Epsilon',
+      url: Image5.src,
+      text: 'Panoramic ocean view with sharp cliffs',
       pos: '50% 50%',
-      by: 'System Placeholder',
+      by: 'Adam Pukaluk',
     },
   },
   {
-    common: 'Project Alpha',
-    binomial: 'Design Mockup I',
+    title: 'Natural Pools',
+    subtitle: 'Madeira lava pools',
     photo: {
-      url: PLACEHOLDER_URL,
-      text: 'Empty placeholder image for Project Alpha',
+      url: Image6.src,
+      text: 'Volcanic natural pools in Porto Moniz',
       pos: '50% 50%',
-      by: 'System Placeholder',
+      by: 'Adam Pukaluk',
     },
   },
   {
-    common: 'Module Beta',
-    binomial: 'Development Phase II',
+    title: 'Coastal Cliffs',
+    subtitle: 'Steep rock walls',
     photo: {
-      url: PLACEHOLDER_URL,
-      text: 'Empty placeholder image for Module Beta',
+      url: Image7.src,
+      text: 'Cliffside path next to the ocean',
       pos: '50% 50%',
-      by: 'System Placeholder',
+      by: 'Adam Pukaluk',
     },
   },
   {
-    common: 'Feature Gamma',
-    binomial: 'UI/UX Concept III',
+    title: 'Sarah',
+    subtitle: 'My dog resting',
     photo: {
-      url: PLACEHOLDER_URL,
-      text: 'Empty placeholder image for Feature Gamma',
+      url: Image8.src,
+      text: 'Mountain top covered in clouds',
       pos: '50% 50%',
-      by: 'System Placeholder',
+      by: 'Adam Pukaluk',
     },
   },
   {
-    common: 'Service Delta',
-    binomial: 'Integration Setup IV',
+    title: 'Sarah',
+    subtitle: 'My dog resting',
     photo: {
-      url: PLACEHOLDER_URL,
-      text: 'Empty placeholder image for Service Delta',
+      url: Image9.src,
+      text: 'Sarah the dog lying calmly outside',
       pos: '50% 50%',
-      by: 'System Placeholder',
+      by: 'Adam Pukaluk',
     },
   },
   {
-    common: 'Prototype Epsilon',
-    binomial: 'Testing Iteration V',
+    title: 'Sarah Close-up',
+    subtitle: 'Evening chill',
     photo: {
-      url: PLACEHOLDER_URL,
-      text: 'Empty placeholder image for Prototype Epsilon',
+      url: Image10.src,
+      text: 'Sarah looking to the side in the yard',
       pos: '50% 50%',
-      by: 'System Placeholder',
+      by: 'Adam Pukaluk',
     },
   },
 ];
-const GallerySlider = () => {
-  // Stan tylko do śledzenia aktualnie wybranego elementu
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const SPIN_SPEED = 0.03; // Stała prędkość ciągłego obrotu
 
-  // Funkcja do aktualizacji indeksu (bez żadnych timerów czy zmian trybu)
+const GallerySlider = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const SPIN_SPEED = 0.03;
+
   const handleInteraction = useCallback((newIndex: number) => {
     setCurrentIndex(newIndex);
   }, []);
@@ -129,17 +136,11 @@ const GallerySlider = () => {
     handleInteraction(newIndex);
   };
 
-  const handleDotClick = (index: number) => {
-    handleInteraction(index);
-  };
-
   return (
     <div className="relative h-screen">
-      <div className="absolute inset-0 pointer-events-none z-[5]" />
-
       <div className="w-full h-screen sticky top-0 flex flex-col items-center justify-center overflow-hidden">
         {/* Header */}
-        <div className="text-center mb-8 absolute top-16 z-10 px-4">
+        <div className="text-center absolute top-6 z-20 px-4">
           <div className="backdrop-blur-md bg-black/40 rounded-2xl px-8 py-6 border border-white/20 shadow-2xl">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
               <p className="bg-gradient-to-r from-gray-400 via-white to-gray-400 bg-clip-text text-transparent animate-[gradient_3s_ease_infinite] bg-[length:200%_auto]">
@@ -154,18 +155,15 @@ const GallerySlider = () => {
           <CircularGallery
             items={galleryData}
             currentIndex={currentIndex}
-            // ZAWSZE przekazujemy prędkość, by obrót był ciągły
             continuousSpinSpeed={SPIN_SPEED}
           />
         </div>
 
-        {/* Controls (pozostają bez zmian w JSX) */}
+        {/* Controls */}
         <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex gap-4 z-10">
           <button
             onClick={handlePrev}
-            className="w-12 h-12 rounded-full backdrop-blur-md bg-black/40 border border-white/20 
-                                   flex items-center justify-center text-white hover:bg-black/60 transition-all
-                                   hover:scale-110 active:scale-95 shadow-lg"
+            className="w-12 h-12 rounded-full backdrop-blur-md bg-black/40 border border-white/20 flex items-center justify-center text-white hover:bg-black/60 transition-all hover:scale-110"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
@@ -178,27 +176,10 @@ const GallerySlider = () => {
 
           <button
             onClick={handleNext}
-            className="w-12 h-12 rounded-full backdrop-blur-md bg-black/40 border border-white/20 
-                                   flex items-center justify-center text-white hover:bg-black/60 transition-all
-                                   hover:scale-110 active:scale-95 shadow-lg"
+            className="w-12 h-12 rounded-full backdrop-blur-md bg-black/40 border border-white/20 flex items-center justify-center text-white hover:bg-black/60 transition-all hover:scale-110"
           >
             <ChevronRight className="w-6 h-6" />
           </button>
-        </div>
-
-        {/* Dots */}
-        <div className="absolute bottom-32 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
-          {galleryData.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => handleDotClick(index)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                index === currentIndex
-                  ? 'bg-white w-8'
-                  : 'bg-white/30 hover:bg-white/50 w-2'
-              }`}
-            />
-          ))}
         </div>
       </div>
     </div>
