@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { CircularGallery, GalleryItem } from '@/components/ui/circular-gallery';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -117,11 +117,24 @@ const galleryData: GalleryItem[] = [
   },
 ];
 
+// Main Gallery Slider Component
 const GallerySlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const SPIN_SPEED = 0.03;
 
-  const handleInteraction = useCallback((newIndex: number) => {
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleInteraction = useCallback((newIndex) => {
     setCurrentIndex(newIndex);
   }, []);
 
@@ -137,15 +150,15 @@ const GallerySlider = () => {
   };
 
   return (
-    <div className="relative h-screen">
-      <div className="w-full h-screen sticky top-0 flex flex-col items-center justify-center overflow-hidden">
+    <div className="relative h-scree">
+      <div className="w-full h-screen flex flex-col items-center justify-center overflow-hidden">
         {/* Header */}
-        <div className="text-center absolute top-6 z-20 px-4">
-          <div className="backdrop-blur-md bg-black/40 rounded-2xl px-8 py-6 border border-white/20 shadow-2xl">
-            <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
-              <p className="bg-gradient-to-r from-gray-400 via-white to-gray-400 bg-clip-text text-transparent animate-[gradient_3s_ease_infinite] bg-[length:200%_auto]">
+        <div className="text-center absolute top-4 md:top-6 z-20 px-4 w-full">
+          <div className="backdrop-blur-md bg-black/40 rounded-xl md:rounded-2xl px-4 py-3 md:px-8 md:py-6 border border-white/20 shadow-2xl inline-block max-w-[90%]">
+            <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">
+              <span className="bg-gradient-to-r from-gray-400 via-white to-gray-400 bg-clip-text text-transparent">
                 Life & Moments
-              </p>
+              </span>
             </h1>
           </div>
         </div>
@@ -156,29 +169,36 @@ const GallerySlider = () => {
             items={galleryData}
             currentIndex={currentIndex}
             continuousSpinSpeed={SPIN_SPEED}
+            isMobile={isMobile}
           />
         </div>
 
         {/* Controls */}
-        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 flex gap-4 z-10">
+        <div className="absolute bottom-6 md:bottom-16 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-4 z-10 px-4">
           <button
             onClick={handlePrev}
-            className="w-12 h-12 rounded-full backdrop-blur-md bg-black/40 border border-white/20 flex items-center justify-center text-white hover:bg-black/60 transition-all hover:scale-110"
+            className="w-10 h-10 md:w-12 md:h-12 rounded-full backdrop-blur-md bg-black/40 border border-white/20 flex items-center justify-center text-white hover:bg-black/60 transition-all hover:scale-110 active:scale-95 touch-manipulation"
+            aria-label="Previous image"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
           </button>
 
-          <div className="flex items-center gap-2 backdrop-blur-md bg-black/40 rounded-full px-6 border border-white/20 shadow-lg">
-            <span className="text-white font-semibold">{currentIndex + 1}</span>
-            <span className="text-gray-400">/</span>
-            <span className="text-gray-400">{galleryData.length}</span>
+          <div className="flex items-center gap-2 backdrop-blur-md bg-black/40 rounded-full px-4 md:px-6 border border-white/20 shadow-lg">
+            <span className="text-white font-semibold text-sm md:text-base">
+              {currentIndex + 1}
+            </span>
+            <span className="text-gray-400 text-sm md:text-base">/</span>
+            <span className="text-gray-400 text-sm md:text-base">
+              {galleryData.length}
+            </span>
           </div>
 
           <button
             onClick={handleNext}
-            className="w-12 h-12 rounded-full backdrop-blur-md bg-black/40 border border-white/20 flex items-center justify-center text-white hover:bg-black/60 transition-all hover:scale-110"
+            className="w-10 h-10 md:w-12 md:h-12 rounded-full backdrop-blur-md bg-black/40 border border-white/20 flex items-center justify-center text-white hover:bg-black/60 transition-all hover:scale-110 active:scale-95 touch-manipulation"
+            aria-label="Next image"
           >
-            <ChevronRight className="w-6 h-6" />
+            <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
           </button>
         </div>
       </div>
