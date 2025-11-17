@@ -36,7 +36,7 @@ import KotlinIcon from '@/public/img/icons/Kotlin_icon.svg';
 // NEW ICONS
 import ReactHookFormIcon from '@/public/img/icons/react-hooj-form-icon.svg';
 import StripeIcon from '@/public/img/icons/stripe-icon.svg';
-
+import PrismaIcon from '@/public/img/icons/prisma-svgrepo-com.svg';
 const ExperienceLevel = {
   BEGINNER: 'Beginner',
   BASIC: 'Basic',
@@ -56,6 +56,16 @@ const SkillCategory = {
 
 const allSkills = [
   // Languages
+  {
+    name: 'Prisma',
+    icon: PrismaIcon,
+    level: ExperienceLevel.INTERMEDIATE,
+    projects: 'Several',
+    categories: [SkillCategory.BACKEND, SkillCategory.TOOLS],
+    details:
+      'ORM for Node.js and TypeScript. Experience with schema modeling, relations, migrations, Prisma Client, and database workflows in production apps.',
+  },
+
   {
     name: 'JavaScript',
     icon: JavaScriptIcon,
