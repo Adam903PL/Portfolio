@@ -65,7 +65,6 @@ const allSkills = [
     details:
       'ORM for Node.js and TypeScript. Experience with schema modeling, relations, migrations, Prisma Client, and database workflows in production apps.',
   },
-
   {
     name: 'JavaScript',
     icon: JavaScriptIcon,
