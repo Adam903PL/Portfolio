@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, Github, Linkedin } from 'lucide-react';
+import { ArrowRight, Github, Linkedin, Coffee } from 'lucide-react';
 import ScrambledText from './ui/Scrambled-Text';
 
 export default function Hero() {
@@ -59,6 +59,17 @@ export default function Hero() {
           >
             Get in Touch
           </Link>
+
+          <a
+            href="https://buymeacoffee.com/adam903"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-2 px-8 py-4 bg-[#FFDD00] text-black rounded-full font-semibold 
+                     hover:bg-[#e6c700] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+          >
+            <Coffee className="w-5 h-5 group-hover:animate-bounce" />
+            <span>Buy me a coffee</span>
+          </a>
         </div>
 
         {/* Social Links */}
