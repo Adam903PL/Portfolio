@@ -90,7 +90,6 @@ export default function RootLayout({
           />
         </div>
 
-        {/* Cała zawartość aplikacji będzie tutaj */}
         <div style={{ position: 'relative', zIndex: 1 }}>
           <MiniNavbar />
           {children}
