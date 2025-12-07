@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect, useRef, HTMLAttributes } from 'react';
+import Image from 'next/image';
 
 const cn = (...classes: (string | undefined | null | false)[]) => {
   return classes.filter(Boolean).join(' ');
@@ -44,12 +45,13 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
 
     const anglePerItem = items.length > 0 ? 360 / items.length : 0;
 
-    // Przy zmianie indeksu ustaw docelowy kąt, do którego mamy płynnie "dociągnąć"
+    // Przy zmianie indeksu ustaw docelowy kąt
     useEffect(() => {
       const currentRotation = rotationRef.current;
+      // Index rośnie -> kąt maleje -> obrót w lewo (counter-clockwise)
       const targetAngle = -currentIndex * anglePerItem;
 
-      // minimalny obrót do nowej pozycji
+      // Oblicz najkrótszą drogę obrotu
       const diff = targetAngle - currentRotation;
       const revolutions = Math.round(diff / 360);
       const newTargetRotation =
@@ -59,7 +61,7 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
       isSnappingRef.current = true;
     }, [currentIndex, anglePerItem]);
 
-    // Ciągły obrót + płynne przejście do nowego indeksu
+    // Pętla animacji
     useEffect(() => {
       let animationFrameId: number;
 
@@ -69,16 +71,15 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
           const target = targetRotationRef.current;
           const delta = target - current;
 
-          // jeśli bardzo blisko celu – zakończ "snap"
-          if (Math.abs(delta) < 0.5) {
+          if (Math.abs(delta) < 0.1) {
             rotationRef.current = target;
             isSnappingRef.current = false;
           } else {
-            // easing w stronę docelowego kąta
-            rotationRef.current = current + delta * 0.15;
+            // Easing
+            rotationRef.current = current + delta * 0.08;
           }
         } else {
-          // zwykły ciągły obrót
+          // Ciągły obrót (teraz będzie w lewo, bo speed jest ujemny)
           rotationRef.current += continuousSpinSpeed;
         }
 
@@ -93,7 +94,6 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
       };
     }, [continuousSpinSpeed]);
 
-    // Dostosowane wymiary dla mobile - większy promień, mniejsze karty
     const cardWidth = isMobile ? 200 : 300;
     const cardHeight = isMobile ? 280 : 400;
     const effectiveRadius = isMobile ? Math.min(radius * 0.7, 400) : radius;
@@ -104,14 +104,14 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
         role="region"
         aria-label="Circular 3D Gallery"
         className={cn(
-          'relative w-full h-full flex items-center justify-center',
+          'relative w-full h-full flex items-center justify-center overflow-hidden',
           className,
         )}
         style={{ perspective: isMobile ? '1200px' : '2000px' }}
         {...props}
       >
         <div
-          className="relative w-full h-full"
+          className="relative w-full h-full flex items-center justify-center"
           style={{
             transform: `rotateY(${rotation}deg)`,
             transformStyle: 'preserve-3d',
@@ -119,52 +119,61 @@ const CircularGallery = React.forwardRef<HTMLDivElement, CircularGalleryProps>(
         >
           {items.map((item, i) => {
             const itemAngle = i * anglePerItem;
+            // Obliczanie widoczności i rotacji kart
             const totalRotation = rotation % 360;
             const relativeAngle = (itemAngle + totalRotation + 360) % 360;
+
+            // Logika "normalizacji" kąta, aby wiedzieć która karta jest z przodu (0 deg)
             const normalizedAngle = Math.abs(
               relativeAngle > 180 ? 360 - relativeAngle : relativeAngle,
             );
-            const opacity = Math.max(0.2, 1 - normalizedAngle / 180);
+
+            // Karta z przodu ma opacity 1, z tyłu mniejsze
+            const opacity = Math.max(
+              0.15,
+              1 - Math.pow(normalizedAngle / 150, 1.5),
+            );
             const scale = Math.max(
               isMobile ? 0.7 : 0.8,
-              1 - normalizedAngle / 360,
+              1 - normalizedAngle / 720, // delikatniejsze skalowanie
             );
+
+            // Ustawienie z-index, aby przednia karta była klikalna i na wierzchu
+            const zIndex = 1000 - Math.round(normalizedAngle);
 
             return (
               <div
-                key={item.photo.url}
+                key={item.photo.url + i}
                 role="group"
                 aria-label={item.title}
-                className="absolute"
+                className="absolute will-change-transform"
                 style={{
                   width: `${cardWidth}px`,
                   height: `${cardHeight}px`,
                   transform: `rotateY(${itemAngle}deg) translateZ(${effectiveRadius}px) scale(${scale})`,
-                  left: '50%',
-                  top: '50%',
-                  marginLeft: `-${cardWidth / 2}px`,
-                  marginTop: `-${cardHeight / 2}px`,
                   opacity,
-                  transition: 'none',
+                  zIndex,
+                  backfaceVisibility: 'hidden', // wydajność
                 }}
               >
-                <div className="relative w-full h-full rounded-lg shadow-2xl overflow-hidden group border border-white/20 bg-card/70 dark:bg-card/30 backdrop-blur-lg">
-                  <img
+                <div className="relative w-full h-full rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden group border border-white/10 bg-black/80 backdrop-blur-sm">
+                  <Image
                     src={item.photo.url}
                     alt={item.photo.text}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
                     style={{ objectPosition: item.photo.pos || 'center' }}
                   />
-                  <div className="absolute bottom-0 left-0 w-full p-3 md:p-4 bg-gradient-to-t from-black/90 to-transparent text-white">
-                    <h2 className="text-base md:text-xl font-bold drop-shadow-lg">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+
+                  <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                    <h2 className="text-lg md:text-2xl font-bold tracking-tight mb-1">
                       {item.title}
                     </h2>
-                    <em className="text-xs md:text-sm italic opacity-90 drop-shadow-md">
+                    <p className="text-sm md:text-base text-gray-300 italic mb-2">
                       {item.subtitle}
-                    </em>
-                    <p className="text-xs mt-1 md:mt-2 opacity-80 drop-shadow-md">
-                      Photo by: {item.photo.by}
                     </p>
+                    <div className="w-10 h-1 bg-white/50 rounded-full" />
                   </div>
                 </div>
               </div>

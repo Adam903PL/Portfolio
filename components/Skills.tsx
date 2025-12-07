@@ -1,10 +1,18 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Filter, Layers, ChevronDown, ChevronUp, X } from 'lucide-react';
+import {
+  Filter,
+  Layers,
+  ChevronDown,
+  ChevronUp,
+  X,
+  Search,
+  Hash,
+} from 'lucide-react';
 import Image from 'next/image';
 
-// Icons imports
+// --- IMPORTS (Bez zmian) ---
 import JavaScriptIcon from '@/public/img/icons/javascript-programming-language-icon.svg';
 import TypeScriptIcon from '@/public/img/icons/typescript-programming-language-icon.svg';
 import PythonIcon from '@/public/img/icons/python-programming-language-icon.svg';
@@ -32,11 +40,10 @@ import JetBrainsIcon from '@/public/img/icons/icons8-jetbrains.svg';
 import N8NIcon from '@/public/img/icons/n8n.svg';
 import BetterAuthIcon from '@/public/img/icons/Better Auth_light.svg';
 import KotlinIcon from '@/public/img/icons/Kotlin_icon.svg';
-
-// NEW ICONS
 import ReactHookFormIcon from '@/public/img/icons/react-hooj-form-icon.svg';
 import StripeIcon from '@/public/img/icons/stripe-icon.svg';
 import PrismaIcon from '@/public/img/icons/prisma-svgrepo-com.svg';
+
 const ExperienceLevel = {
   BEGINNER: 'Beginner',
   BASIC: 'Basic',
@@ -54,8 +61,18 @@ const SkillCategory = {
   TOOLS: 'Tools',
 };
 
+const getProjectCountValue = (val) => {
+  if (typeof val === 'number') return val;
+  const v = val.toLowerCase();
+  if (v.includes('daily')) return 100;
+  if (v.includes('many')) return 20;
+  if (v.includes('several')) return 5;
+  if (v.includes('few')) return 2;
+  return 0;
+};
+
+// --- DATA (Bez zmian) ---
 const allSkills = [
-  // Languages
   {
     name: 'Prisma',
     icon: PrismaIcon,
@@ -128,8 +145,6 @@ const allSkills = [
     details:
       'Semantic markup, accessibility best practices, and modern HTML5 APIs. Foundation of all web development work.',
   },
-
-  // Frameworks & Libraries
   {
     name: 'React',
     icon: ReactIcon,
@@ -193,7 +208,6 @@ const allSkills = [
     details:
       'Complex animations, After Effects integration, dynamic SVG manipulation. Creating engaging user experiences with motion.',
   },
-  // NEW: React Hook Form
   {
     name: 'React Hook Form',
     icon: ReactHookFormIcon,
@@ -203,8 +217,6 @@ const allSkills = [
     details:
       'Form handling in React with excellent performance. Schema validation integration (e.g. Zod/Yup), dynamic forms, and complex controlled/uncontrolled input scenarios.',
   },
-
-  // Backend & APIs
   {
     name: 'Node.js',
     icon: NodeIcon,
@@ -250,7 +262,6 @@ const allSkills = [
     details:
       'Modern authentication system implementation using BetterAuth, integrated with Next.js App Router. Session handling, middleware, and custom authentication providers.',
   },
-  // NEW: Stripe
   {
     name: 'Stripe',
     icon: StripeIcon,
@@ -260,8 +271,6 @@ const allSkills = [
     details:
       'Implemented payment flows using Stripe. Checkout sessions, webhooks handling, subscription logic and integration with full-stack applications.',
   },
-
-  // Databases
   {
     name: 'PostgreSQL',
     icon: PostgresIcon,
@@ -280,8 +289,6 @@ const allSkills = [
     details:
       'Expert-level T-SQL development, complex stored procedures, and query optimization. Extensive 2023 focus on SSIS packages and data warehousing.',
   },
-
-  // Tools & DevOps
   {
     name: 'Git',
     icon: GitIcon,
@@ -336,7 +343,6 @@ const allSkills = [
     details:
       'Workflow automation, API integrations, and backend scenarios without extensive coding. Building complex automation workflows and business processes.',
   },
-  // NEW: Conventional Commits (custom div logo)
   {
     name: 'Conventional Commits',
     icon: null,
@@ -349,37 +355,45 @@ const allSkills = [
   },
 ];
 
-const SkillLevelStars = ({ level }) => {
-  let stars = 0;
+// --- ZMIANA 1: BIAŁY NEONOWY PASEK ---
+const SkillProgressBar = ({ level }) => {
+  let percentage = 0;
+
   switch (level) {
     case ExperienceLevel.EXPERT:
-      stars = 5;
+      percentage = 100;
       break;
     case ExperienceLevel.ADVANCED:
-      stars = 4;
+      percentage = 80;
       break;
     case ExperienceLevel.INTERMEDIATE:
-      stars = 3;
+      percentage = 60;
       break;
     case ExperienceLevel.BASIC:
-      stars = 2;
+      percentage = 40;
+      break;
+    case ExperienceLevel.BEGINNER:
+      percentage = 20;
       break;
     default:
-      stars = 1;
+      percentage = 10;
   }
 
   return (
-    <div className="flex items-center gap-0.5">
-      {[...Array(stars)].map((_, i) => (
-        <div key={`full-${i}`} className="text-yellow-400 w-3 h-3">
-          ★
-        </div>
-      ))}
-      {[...Array(5 - stars)].map((_, i) => (
-        <div key={`empty-${i}`} className="text-gray-600 w-3 h-3">
-          ☆
-        </div>
-      ))}
+    <div className="w-full flex flex-col gap-1.5">
+      <div className="flex justify-between text-[10px] uppercase font-bold tracking-wider text-gray-400">
+        <span>Proficiency</span>
+        <span>{percentage}%</span>
+      </div>
+      <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: `${percentage}%` }}
+          transition={{ duration: 1, delay: 0.2 }}
+          // Tutaj jest zmiana: bg-white + custom shadow dla efektu neonu
+          className="h-full bg-white shadow-[0_0_12px_rgba(255,255,255,0.6)] rounded-full"
+        />
+      </div>
     </div>
   );
 };
@@ -389,23 +403,24 @@ const SkillCard = ({ skill, index }) => {
 
   return (
     <motion.div
+      layout
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ delay: index * 0.05 }}
+      transition={{ layout: { duration: 0.3 } }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative group"
+      className="relative group w-full mb-4"
     >
       <div
-        className="h-full p-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm
-                    hover:bg-white/10 hover:border-white/20 transition-all duration-300
-                    flex flex-col gap-3"
+        className="p-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm
+                   hover:bg-white/10 hover:border-white/20 transition-colors duration-300
+                   flex flex-col gap-4 overflow-hidden"
       >
         <div className="flex items-center gap-3">
           <div
             className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center shrink-0
-                        group-hover:scale-110 transition-transform"
+                       group-hover:scale-110 transition-transform duration-300"
           >
             {skill.customIcon === 'conventional-commits' ? (
               <div className="w-8 h-8 rounded-full border-2 border-white bg-[linear-gradient(45deg,#fe5196,#f77062)]" />
@@ -427,7 +442,6 @@ const SkillCard = ({ skill, index }) => {
           </div>
         </div>
 
-        {/* Category badges */}
         <div className="flex flex-wrap gap-1">
           {skill.categories.map((cat) => (
             <span
@@ -439,11 +453,13 @@ const SkillCard = ({ skill, index }) => {
           ))}
         </div>
 
-        <div className="flex items-center justify-between">
-          <SkillLevelStars level={skill.level} />
-          <span className="text-xs text-gray-400">
+        <SkillProgressBar level={skill.level} />
+
+        <div className="flex items-center justify-between text-xs text-gray-500 pt-1 border-t border-white/5">
+          <span>Projects completed:</span>
+          <span className="text-white font-medium">
             {typeof skill.projects === 'number'
-              ? `${skill.projects} projects`
+              ? skill.projects
               : skill.projects}
           </span>
         </div>
@@ -451,10 +467,10 @@ const SkillCard = ({ skill, index }) => {
         <AnimatePresence>
           {isHovered && (
             <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="text-xs text-gray-300 leading-relaxed overflow-hidden"
+              initial={{ opacity: 0, height: 0, marginTop: 0 }}
+              animate={{ opacity: 1, height: 'auto', marginTop: 8 }}
+              exit={{ opacity: 0, height: 0, marginTop: 0 }}
+              className="text-xs text-gray-300 leading-relaxed block"
             >
               {skill.details}
             </motion.div>
@@ -470,54 +486,84 @@ const Skills = () => {
     new Set(['All']),
   );
   const [selectedLevel, setSelectedLevel] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [minProjects, setMinProjects] = useState(0);
   const [showAll, setShowAll] = useState(false);
+
+  // --- ZMIANA 2: STAN LICZBY KOLUMN DLA MASONRY ---
+  const [columnsCount, setColumnsCount] = useState(1);
+
+  useEffect(() => {
+    const updateColumns = () => {
+      const width = window.innerWidth;
+      if (width >= 1280)
+        setColumnsCount(4); // xl
+      else if (width >= 1024)
+        setColumnsCount(3); // lg
+      else if (width >= 640)
+        setColumnsCount(2); // sm
+      else setColumnsCount(1);
+    };
+
+    updateColumns();
+    window.addEventListener('resize', updateColumns);
+    return () => window.removeEventListener('resize', updateColumns);
+  }, []);
 
   const categories = ['All', ...Object.values(SkillCategory)];
   const levels = ['All', ...Object.values(ExperienceLevel)];
 
   const toggleCategory = (category) => {
+    setShowAll(false);
     setSelectedCategories((prev) => {
       const newSet = new Set(prev);
-
-      if (category === 'All') {
-        return new Set(['All']);
-      }
-
+      if (category === 'All') return new Set(['All']);
       newSet.delete('All');
-
       if (newSet.has(category)) {
         newSet.delete(category);
-        if (newSet.size === 0) {
-          return new Set(['All']);
-        }
+        if (newSet.size === 0) return new Set(['All']);
       } else {
         newSet.add(category);
       }
-
       return newSet;
     });
   };
 
-  const filteredSkills = allSkills.filter((skill) => {
-    const categoryMatch =
-      selectedCategories.has('All') ||
-      skill.categories.some((cat) => selectedCategories.has(cat));
-    const levelMatch = selectedLevel === 'All' || skill.level === selectedLevel;
-    return categoryMatch && levelMatch;
-  });
+  const filteredSkills = useMemo(() => {
+    return allSkills.filter((skill) => {
+      const categoryMatch =
+        selectedCategories.has('All') ||
+        skill.categories.some((cat) => selectedCategories.has(cat));
 
-  // Reset showAll when filters change (bezpośrednio, ale ESLint tu przeszkadza)
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setShowAll(false);
-  }, [selectedCategories, selectedLevel]);
+      const levelMatch =
+        selectedLevel === 'All' || skill.level === selectedLevel;
 
-  // Limit to 12 skills initially (3 rows x 4 columns)
+      const searchMatch = skill.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+
+      const projectCount = getProjectCountValue(skill.projects);
+      const projectsMatch = projectCount >= minProjects;
+
+      return categoryMatch && levelMatch && searchMatch && projectsMatch;
+    });
+  }, [selectedCategories, selectedLevel, searchQuery, minProjects]);
+
   const INITIAL_COUNT = 8;
   const displayedSkills = showAll
     ? filteredSkills
     : filteredSkills.slice(0, INITIAL_COUNT);
   const hasMore = filteredSkills.length > INITIAL_COUNT;
+
+  // --- ZMIANA 3: LOGIKA PODZIAŁU NA KOLUMNY (Masonry) ---
+  // Zamiast renderować płaską listę, dzielimy ją na N tablic (kolumn)
+  const columns = useMemo(() => {
+    const cols = Array.from({ length: columnsCount }, () => []);
+    displayedSkills.forEach((skill, i) => {
+      cols[i % columnsCount].push(skill);
+    });
+    return cols;
+  }, [displayedSkills, columnsCount]);
 
   return (
     <section className="min-h-screen flex items-center justify-center px-4 py-24 relative">
@@ -539,85 +585,148 @@ const Skills = () => {
           </p>
         </div>
 
-        <div className="mb-8 space-y-6">
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Filter className="text-gray-400 w-4 h-4" />
-              <span className="text-sm text-gray-400 font-medium">
-                Categories{' '}
-                {!selectedCategories.has('All') &&
-                  `(${selectedCategories.size} selected)`}
-              </span>
-              {!selectedCategories.has('All') && (
-                <button
-                  onClick={() => setSelectedCategories(new Set(['All']))}
-                  className="ml-2 text-xs text-gray-500 hover:text-gray-300 flex items-center gap-1 transition-colors"
-                >
-                  <X className="w-3 h-3" />
-                  Clear
-                </button>
-              )}
+        {/* Controls Section */}
+        <div className="mb-8 p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="relative">
+              <label className="text-xs text-gray-400 font-medium mb-2 block flex items-center gap-2">
+                <Search className="w-3 h-3" /> Search Skills
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. React, Node..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowAll(false);
+                }}
+                className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-white/30 transition-colors"
+              />
             </div>
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => {
-                const isSelected = selectedCategories.has(category);
-                return (
-                  <button
-                    key={category}
-                    onClick={() => toggleCategory(category)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
-                      ${
-                        isSelected
-                          ? 'bg-gradient-to-br from-white to-gray-300 text-black shadow-lg'
-                          : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
-                      }`}
-                  >
-                    {category}
-                  </button>
-                );
-              })}
+
+            <div>
+              <div className="flex justify-between mb-2">
+                <label className="text-xs text-gray-400 font-medium flex items-center gap-2">
+                  <Hash className="w-3 h-3" /> Min. Projects
+                </label>
+                <span className="text-xs text-white font-mono">
+                  {minProjects === 0 ? 'Any' : `${minProjects}+`}
+                </span>
+              </div>
+              <input
+                type="range"
+                min="0"
+                max="20"
+                step="1"
+                value={minProjects}
+                onChange={(e) => {
+                  setMinProjects(parseInt(e.target.value));
+                  setShowAll(false);
+                }}
+                className="w-full h-1.5 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-white"
+              />
+              <div className="flex justify-between text-[10px] text-gray-500 mt-1">
+                <span>0</span>
+                <span>10</span>
+                <span>20+</span>
+              </div>
             </div>
           </div>
 
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Layers className="text-gray-400 w-4 h-4" />
-              <span className="text-sm text-gray-400 font-medium">
-                Experience Level
-              </span>
+          <div className="h-px bg-white/5 w-full" />
+
+          <div className="space-y-4">
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Filter className="text-gray-400 w-4 h-4" />
+                <span className="text-sm text-gray-400 font-medium">
+                  Categories{' '}
+                  {!selectedCategories.has('All') &&
+                    `(${selectedCategories.size})`}
+                </span>
+                {!selectedCategories.has('All') && (
+                  <button
+                    onClick={() => {
+                      setSelectedCategories(new Set(['All']));
+                      setShowAll(false);
+                    }}
+                    className="ml-2 text-xs text-gray-500 hover:text-gray-300 flex items-center gap-1 transition-colors"
+                  >
+                    <X className="w-3 h-3" /> Clear
+                  </button>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => {
+                  const isSelected = selectedCategories.has(category);
+                  return (
+                    <button
+                      key={category}
+                      onClick={() => toggleCategory(category)}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all
+                        ${
+                          isSelected
+                            ? 'bg-white text-black shadow-lg'
+                            : 'bg-black/20 text-gray-400 hover:bg-black/40 border border-white/10'
+                        }`}
+                    >
+                      {category}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {levels.map((level) => (
-                <button
-                  key={level}
-                  onClick={() => setSelectedLevel(level)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
-                    ${
-                      selectedLevel === level
-                        ? 'bg-gradient-to-br from-white to-gray-300 text-black shadow-lg'
-                        : 'bg-white/5 text-gray-400 hover:bg-white/10 border border-white/10'
-                    }`}
-                >
-                  {level}
-                </button>
-              ))}
+
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <Layers className="text-gray-400 w-4 h-4" />
+                <span className="text-sm text-gray-400 font-medium">
+                  Experience Level
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {levels.map((level) => (
+                  <button
+                    key={level}
+                    onClick={() => {
+                      setSelectedLevel(level);
+                      setShowAll(false);
+                    }}
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all
+                      ${
+                        selectedLevel === level
+                          ? 'bg-white text-black shadow-lg'
+                          : 'bg-black/20 text-gray-400 hover:bg-black/40 border border-white/10'
+                      }`}
+                  >
+                    {level}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        <motion.div
-          layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mb-8"
-        >
+        {/* --- ZMIANA 4: RENDEROWANIE KOLUMN ZAMIAST GRIDU --- */}
+        {/* Kontener Flex trzymający kolumny */}
+        <div className="flex gap-4 items-start mb-8">
           <AnimatePresence mode="popLayout">
-            {displayedSkills.map((skill, index) => (
-              <SkillCard key={skill.name} skill={skill} index={index} />
+            {columns.map((colSkills, colIndex) => (
+              // Pojedyncza kolumna
+              <div
+                key={`col-${colIndex}`}
+                className="flex-1 flex flex-col gap-0 min-w-0"
+              >
+                {colSkills.map((skill, index) => (
+                  <SkillCard key={skill.name} skill={skill} index={index} />
+                ))}
+              </div>
             ))}
           </AnimatePresence>
-        </motion.div>
+        </div>
 
         {filteredSkills.length === 0 && (
-          <div className="text-center py-16 mb-8">
+          <div className="text-center py-16 mb-8 border border-dashed border-white/10 rounded-xl">
             <p className="text-gray-400 text-lg">
               No skills match your filters
             </p>
@@ -625,15 +734,17 @@ const Skills = () => {
               onClick={() => {
                 setSelectedCategories(new Set(['All']));
                 setSelectedLevel('All');
+                setSearchQuery('');
+                setMinProjects(0);
+                setShowAll(false);
               }}
               className="mt-4 px-6 py-2 rounded-lg bg-white/5 text-gray-300 hover:bg-white/10 border border-white/10 transition-colors"
             >
-              Reset Filters
+              Reset All Filters
             </button>
           </div>
         )}
 
-        {/* Show More/Less Button */}
         {hasMore && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -643,8 +754,8 @@ const Skills = () => {
             <button
               onClick={() => setShowAll(!showAll)}
               className="group relative px-8 py-3 rounded-lg border border-white/20 bg-white/5 backdrop-blur-sm
-                       hover:bg-white/10 hover:border-white/30 transition-all duration-300
-                       flex items-center gap-3"
+                        hover:bg-white/10 hover:border-white/30 transition-all duration-300
+                        flex items-center gap-3"
             >
               <span className="text-white font-medium">
                 {showAll

@@ -3,6 +3,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { CircularGallery, GalleryItem } from '@/components/ui/circular-gallery';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+// ... twoje importy zdjęć pozostają bez zmian ...
 import Image1 from '@/public/img/gallery/image_1.jpg';
 import Image2 from '@/public/img/gallery/image_2.jpg';
 import Image3 from '@/public/img/gallery/image_3.jpg';
@@ -16,21 +17,21 @@ import Image10 from '@/public/img/gallery/image_10.jpg';
 
 const galleryData: GalleryItem[] = [
   {
-    title: 'Golden Buddha',
-    subtitle: 'Peaceful temple display',
-    photo: {
-      url: Image1.src,
-      text: 'Golden Buddha statue in a red shrine',
-      pos: '50% 50%',
-      by: 'Adam Pukaluk',
-    },
-  },
-  {
     title: 'Madeira Cliffs',
     subtitle: 'Wild rock formations',
     photo: {
       url: Image2.src,
       text: 'Tall volcanic rocks at the Madeira coast',
+      pos: '50% 50%',
+      by: 'Adam Pukaluk',
+    },
+  },
+  {
+    title: 'Golden Buddha',
+    subtitle: 'Peaceful temple display',
+    photo: {
+      url: Image1.src,
+      text: 'Golden Buddha statue in a red shrine',
       pos: '50% 50%',
       by: 'Adam Pukaluk',
     },
@@ -121,7 +122,9 @@ const galleryData: GalleryItem[] = [
 const GallerySlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
-  const SPIN_SPEED = 0.03;
+
+  // ZMIANA TUTAJ: Wartość ujemna odwraca kierunek obrotu (w lewo)
+  const SPIN_SPEED = -0.05;
 
   useEffect(() => {
     const checkMobile = () => {
@@ -150,7 +153,8 @@ const GallerySlider = () => {
   };
 
   return (
-    <div className="relative h-scree">
+    // ZMIANA: Poprawiono literówkę "h-scree" na "h-screen"
+    <div className="relative h-screen">
       <div className="w-full h-screen flex flex-col items-center justify-center overflow-hidden">
         {/* Header */}
         <div className="text-center absolute top-4 md:top-6 z-20 px-4 w-full">

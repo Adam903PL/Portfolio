@@ -20,6 +20,12 @@ export const metadata: Metadata = {
     default: 'Adam Pukaluk',
     template: '%s | Adam Pukaluk',
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', type: 'image/x-icon' },
+      { url: '/img/logo.svg', type: 'image/svg+xml' },
+    ],
+  },
   description:
     'Official portfolio of Adam Pukaluk – young full-stack developer passionate about modern web technologies.',
   keywords: [
