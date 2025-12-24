@@ -25,9 +25,9 @@ export const metadata: Metadata = {
     icon: [
       { url: '/favicon.ico', type: 'image/x-icon' },
       { url: '/img/logo.svg', type: 'image/svg+xml' },
-      { url: '/img/icon.png', type: 'image/png' },
+      { url: '/img/logo.png', type: 'image/png' },
     ],
-    shortcut: '/img/icon.png',
+    shortcut: '/img/logo.png',
   },
   description:
     'Official portfolio of Adam Pukaluk – young full-stack developer passionate about modern web technologies.',
