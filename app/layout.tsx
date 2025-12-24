@@ -4,6 +4,7 @@ import './globals.css';
 import Beams from '@/components/ui/Beams';
 import MiniNavbar from '@/components/ui/mini-navbar';
 import Footer from '@/components/Footer';
+import { SnowfallEffect } from '@/components/snowfall-effect';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -89,6 +90,8 @@ export default function RootLayout({
             rotation={30}
           />
         </div>
+
+        <SnowfallEffect />
 
         <div style={{ position: 'relative', zIndex: 1 }}>
           <MiniNavbar />
