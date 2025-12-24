@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef, useState } from "react";
-import { useScroll, useTransform, motion } from "framer-motion";
-import type { LucideIcon } from "lucide-react";
+import React, { useEffect, useRef, useState } from 'react';
+import { useScroll, useTransform, motion } from 'framer-motion';
+import type { LucideIcon } from 'lucide-react';
 
 // ============ ACETERNITY UI - Timeline Component ============
 interface TimelineEntry {
@@ -24,7 +24,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 10%", "end 50%"],
+    offset: ['start 10%', 'end 50%'],
   });
 
   const heightTransform = useTransform(scrollYProgress, [0, 1], [0, height]);
@@ -32,10 +32,13 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
 
   return (
     <div className="w-full font-sans" ref={containerRef}>
-      <div className="max-w-7xl mx-auto py-20 px-4 md:px-8 lg:px-10">
+      <div className="max-w-7xl mx-auto pt-0 pb-20 px-4 md:px-8 lg:px-10">
         <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
           {data.map((item, index) => (
-            <div key={index} className="flex justify-start pt-10 md:pt-40 md:gap-10">
+            <div
+              key={index}
+              className="flex justify-start pt-10 md:pt-40 md:gap-10"
+            >
               <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
                 <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
                   <div className="h-4 w-4 rounded-full bg-white border border-white/50 p-2" />
@@ -55,7 +58,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
           ))}
           <div
             style={{
-              height: height + "px",
+              height: height + 'px',
             }}
             className="absolute md:left-8 left-8 top-0 overflow-hidden w-[2px] bg-[linear-gradient(to_bottom,var(--tw-gradient-stops))] from-transparent from-[0%] via-white/20 to-transparent to-[99%] [mask-image:linear-gradient(to_bottom,transparent_0%,black_10%,black_90%,transparent_100%)]"
           >
@@ -87,7 +90,8 @@ const CardContainer = ({
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!isMouseEntered) setIsMouseEntered(true);
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+    const { left, top, width, height } =
+      e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - left - width / 2) / 25;
     const y = (e.clientY - top - height / 2) / 25;
     e.currentTarget.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
@@ -103,13 +107,13 @@ const CardContainer = ({
   };
 
   return (
-    <div className={containerClassName} style={{ perspective: "1000px" }}>
+    <div className={containerClassName} style={{ perspective: '1000px' }}>
       <div
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         className={`relative transition-all duration-200 ease-linear ${className}`}
-        style={{ transformStyle: "preserve-3d" }}
+        style={{ transformStyle: 'preserve-3d' }}
       >
         {children}
       </div>
@@ -125,14 +129,17 @@ const CardBody = ({
   className?: string;
 }) => {
   return (
-    <div className={`h-full w-full ${className}`} style={{ transformStyle: "preserve-3d" }}>
+    <div
+      className={`h-full w-full ${className}`}
+      style={{ transformStyle: 'preserve-3d' }}
+    >
       {children}
     </div>
   );
 };
 
 const CardItem = ({
-  as: Tag = "div",
+  as: Tag = 'div',
   children,
   className,
   translateX = 0,
@@ -156,11 +163,11 @@ const CardItem = ({
     const handleMouseLeave = () => setIsMouseEntered(false);
     const parent = ref.current?.parentElement?.parentElement;
     if (parent) {
-      parent.addEventListener("mouseenter", handleMouseEnter);
-      parent.addEventListener("mouseleave", handleMouseLeave);
+      parent.addEventListener('mouseenter', handleMouseEnter);
+      parent.addEventListener('mouseleave', handleMouseLeave);
       return () => {
-        parent.removeEventListener("mouseenter", handleMouseEnter);
-        parent.removeEventListener("mouseleave", handleMouseLeave);
+        parent.removeEventListener('mouseenter', handleMouseEnter);
+        parent.removeEventListener('mouseleave', handleMouseLeave);
       };
     }
   }, []);
@@ -172,8 +179,8 @@ const CardItem = ({
       style={{
         transform: isMouseEntered
           ? `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px)`
-          : "translateX(0px) translateY(0px) translateZ(0px)",
-        transition: "all 0.5s ease-out",
+          : 'translateX(0px) translateY(0px) translateZ(0px)',
+        transition: 'all 0.5s ease-out',
       }}
       {...rest}
     >
@@ -218,10 +225,10 @@ export interface EducationJourneyProps {
 }
 
 // ============ Skill Level Stars Component ============
-const SkillLevelStars = ({ 
-  level, 
-  levelConfig 
-}: { 
+const SkillLevelStars = ({
+  level,
+  levelConfig,
+}: {
   level: string;
   levelConfig?: { [key: string]: number };
 }) => {
@@ -230,19 +237,23 @@ const SkillLevelStars = ({
     Advanced: 4,
     Intermediate: 3,
     Basic: 2,
-    Beginner: 1
+    Beginner: 1,
   };
-  
+
   const config = levelConfig || defaultConfig;
   const stars = config[level] || 3;
-  
+
   return (
     <div className="flex items-center gap-0.5">
       {[...Array(stars)].map((_, i) => (
-        <div key={`full-${i}`} className="text-yellow-400 w-3 h-3">★</div>
+        <div key={`full-${i}`} className="text-yellow-400 w-3 h-3">
+          ★
+        </div>
       ))}
       {[...Array(5 - stars)].map((_, i) => (
-        <div key={`empty-${i}`} className="text-gray-600 w-3 h-3">☆</div>
+        <div key={`empty-${i}`} className="text-gray-600 w-3 h-3">
+          ☆
+        </div>
       ))}
     </div>
   );
@@ -253,20 +264,22 @@ const EducationJourney: React.FC<EducationJourneyProps> = ({
   data,
   iconMap = {},
   header = {
-    subtitle: "My Journey",
-    title: "Education & Certifications",
-    description: "From fundamentals to advanced expertise - tracking my continuous learning journey in technology",
+    subtitle: 'My Journey',
+    title: 'Education & Certifications',
+    description:
+      'From fundamentals to advanced expertise - tracking my continuous learning journey in technology',
   },
   stats,
   showStats = true,
   showStars = true,
-  levelConfig
+  levelConfig,
 }) => {
-
   // Generuj unikalne ID dla każdego itemu
   const dataWithIds = data.map((item, index) => ({
     ...item,
-    id: item.id || `${item.year}-${item.title}-${index}`.replace(/\s+/g, '-').toLowerCase()
+    id:
+      item.id ||
+      `${item.year}-${item.title}-${index}`.replace(/\s+/g, '-').toLowerCase(),
   }));
 
   const timelineData = dataWithIds.map((item) => {
@@ -277,24 +290,34 @@ const EducationJourney: React.FC<EducationJourneyProps> = ({
       content: (
         <CardContainer className="w-full" key={item.id}>
           <CardBody className="relative group/card border border-white/10 bg-white/5 backdrop-blur-sm w-full h-auto rounded-xl p-6 hover:border-white/20 transition-all">
-            
-            <CardItem translateZ="50" className="text-xl font-bold text-white mb-2">
+            <CardItem
+              translateZ="50"
+              className="text-xl font-bold text-white mb-2"
+            >
               {item.title}
             </CardItem>
-            
-            <CardItem translateZ="60" className="text-gray-300 text-sm mb-4 flex items-center gap-2">
+
+            <CardItem
+              translateZ="60"
+              className="text-gray-300 text-sm mb-4 flex items-center gap-2"
+            >
               {IconComponent && <IconComponent className="w-4 h-4" />}
               {item.institution}
             </CardItem>
-            
+
             <CardItem translateZ="100" className="w-full mb-4">
               <p className="text-gray-400 text-sm leading-relaxed">
                 {item.description}
               </p>
             </CardItem>
 
-            <CardItem translateZ="80" className="flex items-center justify-between mb-4 pb-4 border-b border-white/10">
-              {showStars && <SkillLevelStars level={item.level} levelConfig={levelConfig} />}
+            <CardItem
+              translateZ="80"
+              className="flex items-center justify-between mb-4 pb-4 border-b border-white/10"
+            >
+              {showStars && (
+                <SkillLevelStars level={item.level} levelConfig={levelConfig} />
+              )}
 
               {item.grade && (
                 <span className="text-xs text-white bg-white/10 px-3 py-1 rounded-full border border-white/20">
@@ -323,7 +346,7 @@ const EducationJourney: React.FC<EducationJourneyProps> = ({
     <section className="w-full relative">
       {/* Header */}
       {header && (
-        <div className="text-center pt-20 pb-10 px-4">
+        <div className="text-center pt-32 pb-10 px-4">
           {header.subtitle && (
             <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
               {header.subtitle}
@@ -348,14 +371,18 @@ const EducationJourney: React.FC<EducationJourneyProps> = ({
       {/* Stats */}
       {showStats && stats && stats.length > 0 && (
         <div className="max-w-7xl mx-auto px-4 pb-20">
-          <div className={`grid grid-cols-2 md:grid-cols-${Math.min(stats.length, 4)} gap-4`}>
+          <div
+            className={`grid grid-cols-2 md:grid-cols-${Math.min(stats.length, 4)} gap-4`}
+          >
             {stats.map((stat, index) => (
-              <div 
+              <div
                 key={index}
                 className="text-center p-4 rounded-xl border border-white/10 bg-white/5 backdrop-blur-sm"
               >
                 <stat.icon className="w-6 h-6 text-white/60 mx-auto mb-2" />
-                <p className="text-2xl font-bold text-white mb-1">{stat.value}</p>
+                <p className="text-2xl font-bold text-white mb-1">
+                  {stat.value}
+                </p>
                 <p className="text-xs text-gray-400">{stat.label}</p>
               </div>
             ))}

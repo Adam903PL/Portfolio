@@ -11,6 +11,9 @@ import {
   Phone,
   Check,
   Mail,
+  Dumbbell,
+  Code,
+  ArrowRight,
 } from 'lucide-react';
 
 const About = () => {
@@ -49,7 +52,7 @@ const About = () => {
             <div className="aspect-square rounded-2xl overflow-hidden border border-white/10 bg-gradient-to-br from-gray-600/10 to-gray-800/10 backdrop-blur-sm flex items-center justify-center">
               <div className="relative w-3/4 h-3/4">
                 <Image
-                  src="/img/gy19rvVD.jpg"
+                  src="/img/me-santa.png"
                   alt="Adam Pukaluk"
                   fill
                   priority
@@ -121,8 +124,25 @@ const About = () => {
               ))}
             </div>
 
+            {/* Currently Working On */}
+            <div className="mt-5 p-4 rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm group hover:bg-white/10 transition-all">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-2">
+                <Code className="w-4 h-4 text-white/80" />
+                Currently Working On
+              </p>
+              <a
+                href="https://github.com/promptversioncontrol-org/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between text-white font-medium hover:text-gray-300 transition-colors"
+              >
+                <span>promptversioncontrol-org</span>
+                <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1 transition-transform" />
+              </a>
+            </div>
+
             {/* Stats */}
-            <div className="grid grid-cols-2 gap-3 pt-4">
+            <div className="grid grid-cols-3 gap-3 pt-4">
               <div className="text-center p-3 rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm">
                 <Briefcase className="w-5 h-5 text-white/60 mx-auto mb-1" />
                 <p className="text-2xl font-bold text-white mb-0.5">3+</p>
@@ -132,6 +152,11 @@ const About = () => {
                 <Code2 className="w-5 h-5 text-white/60 mx-auto mb-1" />
                 <p className="text-2xl font-bold text-white mb-0.5">15+</p>
                 <p className="text-xs text-gray-400">Projects</p>
+              </div>
+              <div className="text-center p-3 rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm">
+                <Dumbbell className="w-5 h-5 text-white/60 mx-auto mb-1" />
+                <p className="text-2xl font-bold text-white mb-0.5">105kg</p>
+                <p className="text-xs text-gray-400">Bench Press</p>
               </div>
             </div>
 

@@ -27,16 +27,6 @@ const galleryData: GalleryItem[] = [
     },
   },
   {
-    title: 'Golden Buddha',
-    subtitle: 'Peaceful temple display',
-    photo: {
-      url: Image1.src,
-      text: 'Golden Buddha statue in a red shrine',
-      pos: '50% 50%',
-      by: 'Adam Pukaluk',
-    },
-  },
-  {
     title: 'Ocean Power',
     subtitle: 'Waves crashing the shore',
     photo: {
