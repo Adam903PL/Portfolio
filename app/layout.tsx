@@ -23,9 +23,9 @@ export const metadata: Metadata = {
     template: '%s | Adam Pukaluk',
   },
   icons: {
-    icon: '/img/92x92logo.png',
-    shortcut: '/img/92x92logo.png',
-    apple: '/img/92x92logo.png',
+    icon: '/img/48x48logo.png',
+    shortcut: '/img/48x48logo.png',
+    apple: '/img/48x48logo.png',
   },
   description:
     'Official portfolio of Adam Pukaluk – young full-stack developer passionate about modern web technologies.',
