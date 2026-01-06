@@ -17,17 +17,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.adampukaluk.pl'),
   title: {
     default: 'Adam Pukaluk',
     template: '%s | Adam Pukaluk',
   },
   icons: {
-    icon: [
-      { url: '/favicon.ico', type: 'image/x-icon' },
-      { url: '/img/logo.svg', type: 'image/svg+xml' },
-      { url: '/img/logo.png', type: 'image/png' },
-    ],
-    shortcut: '/img/logo.png',
+    icon: '/img/92x92logo.png',
+    shortcut: '/img/92x92logo.png',
+    apple: '/img/92x92logo.png',
   },
   description:
     'Official portfolio of Adam Pukaluk – young full-stack developer passionate about modern web technologies.',
@@ -41,7 +39,6 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'Adam Pukaluk' }],
   creator: 'Adam Pukaluk',
-  metadataBase: new URL('https://www.adampukaluk.pl'),
 
   openGraph: {
     title: 'Adam Pukaluk – Portfolio',
@@ -69,7 +66,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* Statyczne tło z animowanymi liniami */}
         <div
           style={{
             position: 'fixed',
